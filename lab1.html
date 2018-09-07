@@ -213,6 +213,29 @@ Updated: 09/06/2018 -->
 
       <hr>
       <h4 class="page-header text-left">Part 2 — Modify the Blink Sketch</h4>
+      <ul> 
+        <li>We connected an LED to each of the digital pins to ensure that they work. We ensured that the we would not burn out the pins by connecting the LED’s in series with a 300 ohm resistor.</li>
+        <li>The code is identical to that of the “Blink” example sketch, except for the pin number that the I/O functions use. We replace “LED_BUILTIN” with the pin number we connected our LED to.</li>
+        <li>Below we show the LED blinking while connected to digital pin 0.</li>
+        </ul>
+      <code>void setup() {
+        <br>
+        &nbsp &nbsp pinMode(0, OUTPUT);
+        <br>
+        }
+        <br>
+        void loop() {
+        <br>
+        &nbsp &nbsp digitalWrite(0, HIGH);   // turn the LED on (HIGH is the voltage level)
+        <br>
+        &nbsp &nbsp delay(1000);                 // wait for a second
+        <br>
+        &nbsp &nbsp digitalWrite(0, LOW);    // turn the LED off by making the voltage LOW
+        <br>
+        &nbsp &nbsp delay(1000);                  // wait for a second
+        <br>
+      }
+      </code>
       <hr>
       <h4 class="page-header text-left">Part 3 — The Serial Monitor and the Analog Pins</h4>
       <ul>
@@ -269,9 +292,100 @@ Updated: 09/06/2018 -->
           </div>
         </div>
       </div>
+
+
+      <hr>
+      <h4 class="page-header text-left">Part 4 — Analog Output</h4>
+      <ul>
+        <li>The Arduino can only output digital signals.</li>
+        <li>To create an ‘analog output,’ use a pulse-width modulator (PWM).</li>
+        <ul>
+          <li>Pins with PWM capability are denoted with a tilde (~) symbol. </li>
+        </ul>
+        <li>To demonstrate this, we used a potentiometer to vary the brightness of an LED.</li>
+        <li>Potentiometer provides an analog input to the Arduino</li>
+        <ul>
+          <li>analogRead()</li>
+          <li>Range = (0, 1023)</li>
+        </ul>
+        <li>LED receives an output from a digital output pin that supports PWM.</li>
+        <ul>
+          <li>analogWrite()</li>
+          <li>Range = (0, 255)</li>
+        </ul>
+      </ul>
+      <code>int analogInput = A0;
+        <br>
+        int digitalPin = 11;
+        <br>
+        int voltageValue = 0;
+        <br>
+        int delayTime = 500; //half a second
+        <br>
+        void setup() {
+        <br>
+        &nbsp &nbsp Serial.begin(9600);
+        <br>
+        &nbsp &nbsp pinMode(digitalPin, OUTPUT);
+        <br>
+        }
+        <br>
+        void loop() {
+        <br>
+        &nbsp &nbsp voltageValue = analogRead(analogInput);
+        <br>
+        &nbsp &nbsp Serial.println(voltageValue); //Prints to serial monitor, used for debugging purposes
+        <br>
+        &nbsp &nbsp delay(delayTime);
+        <br>
+        &nbsp &nbsp analogWrite(digitalPin, voltageValue/4); 
+        <br>
+        }
+        <br>
+      </code>
+      <ul>
+        <li>Create linear map from analogRead → analogWrite by dividing by 4.</li>
+      </ul>
+
       <hr>
       
       <h4 class="page-header text-left">Part 5 — Parallax Servos</h4>
+      <ul>
+        <li>We connect Parallax continuous rotation servos to the Arduino and set it to run at varying speeds. </li>
+        <li>In order to use servos, the Servo library needs to be included in the sketch. This is done with a #include statement at the top. </li>
+        <li>A Servo object needs to be declared for each servo that is used. In the example below, “myservo” is the name of the servo that is connected to the Arduino. </li>
+        <li>In setup(), myservo.attach(3) connects the servo to pin digital pin number 3. This a PWM capable pin, since servos need a PWM signal to operate.</li>
+        <li>In loop(), the last statement, myservo.write(val), writes an integer value ranging from 0 to 180 to set the servo speed. This correlates with the PWM duty cycle that is outputted from the pin. A value of 0 rotates full speed in one direction, and 180 is full speed in the other direction. A value of 90 means the servo will not turn in either direction. </li>
+        <li>The two statements above myservo.write() read analog voltage from the pin the potentiometer is connected to and set the servo to a speed corresponding to that voltage value. The map(readValue, 0, 670, 0, 180) function takes in the readValue input, which ranges from 0 to 670, and scales it to an integer value between 0 and 180, which is returned. This allows the potentiometer to control the servo movement. </li>
+      </ul>
+      <code>
+        #include <Servo.h>
+        <br>
+        int val = 90;
+        <br>
+        int readValue = 0;
+        <br>
+        int pinName = A0;
+        <br>
+        Servo myservo;
+        <br>
+        void setup() {
+        <br>
+        &nbsp &nbsp myservo.attach(3);
+        <br>
+        }
+        <br>
+        void loop() {
+        <br>
+        &nbsp &nbsp readValue = analogRead(pinName);
+        <br>
+        &nbsp &nbsp val = map(readValue, 0, 670, 0, 180);
+        <br>
+        &nbsp &nbsp myservo.write(val);
+        <br>
+        }
+      </code>
+      
       <hr>
       <h4 class="page-header text-left">Part 6 — Assembling and Running Our Robot</h4>
 
