@@ -141,9 +141,9 @@ Updated: 09/06/2018 -->
       <ul>
         <li>1 Arduino Uno</li>
         <li>1 USB A/B cable</li>
-        <li>1 Continuous rotation servo</li>
+        <li>1 Parallax continuous rotation servo</li>
         <li>1 LED (not IR)</li>
-        <li>1 Potentiometer</li>
+        <li>1 10kΩ Potentiometer</li>
         <li>Several resistors (kΩ range)</li>
         <li>1 Solderless breadboard</li>
       </ul>
@@ -163,6 +163,22 @@ Updated: 09/06/2018 -->
           <li>If the LED does not blink, check under Tools > Serial Port list to make sure that the Uno is connected to the correct COM port</li>
         </ul>
       </ul>
+      <br>
+      <p><u>All Arduino sketches require two functions:</u></p>
+      <code>void setup() {}</code>
+      <ul class="list-bullet">
+        <li>Called at the start of the entire program</li>
+        <li>Used to initialize variables and setup I/O pins</li>
+        <li>Only executes once</li>
+      </ul>
+      <code>void loop() {}</code>
+      <ul class="list-bullet">
+        <li>Contains the main body of your program</li>
+        <li>Loops forever</li>
+      </ul>
+      <br>
+      <p><u>Our example sketch code:</u></p>
+
       <code>void setup() {
         <br>
         &nbsp &nbsp // initialize digital pin LED_BUILTIN as an output.
@@ -195,26 +211,24 @@ Updated: 09/06/2018 -->
         <li>The program delays for 1 second in between each high / low write (time units are in ms → 1000 ms = 1 second)</li>
       </ul>
       <br>
-      <p><u>All Arduino sketches require two functions:</u></p>
-      <code>void setup() {}</code>
-      <ul class="list-bullet">
-        <li>Called at the start of the entire program</li>
-        <li>Used to initialize variables and setup I/O pins</li>
-        <li>Only executes once</li>
-      </ul>
-      <code>void loop() {}</code>
-      <ul class="list-bullet">
-        <li>Contains the main body of your program</li>
-        <li>Loops forever</li>
-      </ul>
       <hr>
 
       <h4 class="page-header text-left">Part 2 — Modify the Blink Sketch</h4>
-      <ul>
-        <li>We connected an LED to each of the digital pins to ensure that they work. We ensured that the we would not burn out the pins by connecting the LED’s in series with a 300 ohm resistor.</li>
-        <li>The code is identical to that of the “Blink” example sketch, except for the pin number that the I/O functions use. We replace “LED_BUILTIN” with the pin number we connected our LED to.</li>
-        <li>Below we show the LED blinking while connected to digital pin 0.</li>
+      <p><u>GOAL: modify the Blink sketch to control an external LED</u></p>
+      <ul class="list-bullet">
+        <li>The code is identical to that of the Blink example, except for the pin number that the I/O functions use</li>
+        <ul class="list-bullet">
+          <li>Replace “LED_BUILTIN” with the pin number that the LED is connected to</li>
         </ul>
+        <li>Use the LED with every digital pin to test that they all work</li>
+        <li>As a safety measure, connect the LED in series with a 300 Ohm resistor.</li>
+        <ul>
+          <li>In the event of a complete short out, this limits the output current to
+          I = V/R = (3.3V/300Ω) = 0.011 A.</li>
+        </ul>
+        <li>Below we show the LED blinking while connected to digital pin 0</li>
+      </ul>
+      <br>
       <code>void setup() {
         <br>
         &nbsp &nbsp pinMode(0, OUTPUT);
@@ -253,6 +267,7 @@ Updated: 09/06/2018 -->
       <hr>
 
       <h4 class="page-header text-left">Part 3 — The Serial Monitor and the Analog Pins</h4>
+      <p><u>GOAL: Read an analog value and verify it is correct via serial monitor</u></p>
       <ul>
         <li>Connect a potentiometer in parallel with a resistor</li>
         <li>This resulting output is connected in series with a 300 ohm resistor to one of the Uno's analog pins</li>
@@ -317,21 +332,24 @@ Updated: 09/06/2018 -->
       <h4 class="page-header text-left">Part 4 — Analog Output</h4>
       <ul>
         <li>The Arduino can only output digital signals.</li>
-        <li>To create an ‘analog output,’ use a pulse-width modulator (PWM).</li>
+        <li>To simulate an analog output, use a pin with pulse-width modulation (PWM).
+          For more info on PWM, look <a class="_blank" href="https://www.arudino.cc/en/Tutorial/PWM">here</a>.</li>
         <ul>
           <li>Pins with PWM capability are denoted with a tilde (~) symbol. </li>
         </ul>
-        <li>To demonstrate this, we used a potentiometer to vary the brightness of an LED.</li>
-        <li>Potentiometer provides an analog input to the Arduino</li>
+        <li>To demonstrate this, use a potentiometer to vary the brightness of an LED</li>
+        <li>The potentiometer provides an analog input to the Arduino
         <ul>
-          <li>analogRead()</li>
-          <li>Range = (0, 1023)</li>
+          <li>Function = analogRead()
+          <li>Range = (0, 1023)
         </ul>
-        <li>LED receives an output from a digital output pin that supports PWM.</li>
+        <li>A PWM-capable digital output pin controls the LED brightness</li>
         <ul>
           <li>analogWrite()</li>
           <li>Range = (0, 255)</li>
         </ul>
+        <li>To handle the range mismatch between analogRead() and analogWrite(),
+          we divided the read values by four (seen in last line).</li>
       </ul>
       <code>int analogInput = A0;
         <br>
@@ -362,9 +380,12 @@ Updated: 09/06/2018 -->
         }
         <br>
       </code>
-      <ul>
-        <li>Create linear map from analogRead → analogWrite by dividing by 4.</li>
-      </ul>
+      <br>
+      <p><u>Demonstration:</u></p>
+      <center>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/zESgMMeBGgY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </center>
+
       <hr>
 
       <h4 class="page-header text-left">Part 5 — Parallax Servos</h4>
@@ -403,6 +424,12 @@ Updated: 09/06/2018 -->
         <br>
         }
       </code>
+      <br>
+      <p><u>Demonstration:</u></p>
+      <center>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/G1kvCMm8c5Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </center>
+
       <hr>
 
       <h4 class="page-header text-left">Part 6 — Assembling and Running Our Robot</h4>
