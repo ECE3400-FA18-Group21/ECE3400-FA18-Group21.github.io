@@ -453,6 +453,70 @@ Updated: 09/06/2018 -->
         <li>We modeled our prototype off of last year’s designs (found on their websites)</li>
         <li>See the images below for a detailed overview of the design</li>
       </ul>
+        <br>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="thumbnail">
+                <img src="img/lab1/assembly1.jpg" style="width:100%">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="thumbnail">
+                <img src="img/lab1/assembly2.jpg" style="width:100%">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="thumbnail">
+                <img src="img/lab1/assembly3.jpg" style="width:100%">
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-3">
+              <div class="thumbnail">
+                <img src="img/lab1/assembly5.jpg" style="width:100%">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="thumbnail">
+                <img src="img/lab1/assembly4.jpg" style="width:100%">
+              </div>
+            </div>
+          </div>
+        </div>
+        <li>For our code, we wrote a header file with the following movement commands:</li>
+        <code>// Stops the robot
+        <br>void stopMotors(Servo servo_L, Servo servo_R);
+        <br><br>// Drives the robot forward
+        <br>void moveForward(Servo servo_L, Servo servo_R);
+
+        <br><br>// Drives the robot backward
+        <br>void moveBackward(Servo servo_L, Servo servo_R);
+
+        <br><br>// Turns the robot right slightly, based on [amount]
+        <br>void adjustRight(Servo servo_L, Servo servo_R, int amount);
+
+        <br><br>// Turns the robot left slightly, based on [amount]
+        <br>void adjustLeft(Servo servo_L, Servo servo_R, int amount);
+
+        <br><br>// Turns the robot 90 degrees right, in place
+        <br>void turnRight(Servo servo_L, Servo servo_R);
+
+        <br><br>// Turns the robot 90 degrees left, in place
+        <br>void turnLeft(Servo servo_L, Servo servo_R);
+        </code>
+
+        <p>By running these commands sequentially with delays, we can program
+          our robot to move around in arbitrary patterns. We used these functions
+          to move our robot around a square in the video.
+        </p>
+        <div class="embed-responsive embed-responsive-21by9">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/mx2mz0wDnFU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
 
     </div>
 
