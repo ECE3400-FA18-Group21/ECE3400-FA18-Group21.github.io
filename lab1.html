@@ -89,7 +89,7 @@ Updated: 09/06/2018 -->
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="team-contract.html#contract">Team Contract</a>
-                <a class="dropdown-item" href="meeting-minutes.html">Meeting Minutes</a>
+                <a class="dropdown-item" href="meeting-minutes.html#minutes">Meeting Minutes</a>
                 <a class="dropdown-item" href="#">TBD 3</a>
                 <a class="dropdown-item" href="#">TBD 4</a>
               </div>
@@ -182,7 +182,7 @@ Updated: 09/06/2018 -->
       <p><u>Our example sketch code:</u></p>
 
       <pre class="prettyprint"><code class="language-cpp">
-      void setup(){ 
+      void setup(){
           // initialize digital pin LED_BUILTIN as an output.
           pinMode(LED_BUILTIN, OUTPUT);
       }
@@ -224,7 +224,7 @@ Updated: 09/06/2018 -->
         <li>Below we show the LED blinking while connected to digital pin 0</li>
       </ul>
       <br>
-      
+
       <pre class="prettyprint"><code class="language-cpp">
       void setup() {
         pinMode(0, OUTPUT);
@@ -263,7 +263,7 @@ Updated: 09/06/2018 -->
         <li>This resulting output is connected in series with a 300 ohm resistor to one of the Uno's analog pins</li>
         <li>The voltage values read by the analog pin are printed over the USB cable and displayed in the IDE’s serial monitor</li>
       </ul>
-      
+
       <pre class="prettyprint"><code class="language-cpp">
       int readValue = 0;
       int pinName = A0;
@@ -276,7 +276,7 @@ Updated: 09/06/2018 -->
         </ul>
       </ul>
 
-      
+
       <pre class="prettyprint"><code class="language-cpp">
       void setup() {
         Serial.begin(9600);  }
@@ -289,12 +289,12 @@ Updated: 09/06/2018 -->
         </ul>
       </ul>
 
-      
+
       <pre class="prettyprint"><code class="language-cpp">
       void loop() {
         readValue = analogRead(pinName);
         Serial.println(readValue);
-        delay(500); 
+        delay(500);
       }
       </code></pre>
       <ul>
@@ -348,18 +348,18 @@ Updated: 09/06/2018 -->
         <li>To handle the range mismatch between analogRead() and analogWrite(),
           we divided the read values by four (seen in last line).</li>
       </ul>
-      
+
       <pre class="prettyprint"><code class="language-cpp">
       int analogInput = A0;
       int digitalPin = 11;
       int voltageValue = 0;
       int delayTime = 500; //half a second
-      
+
       void setup() {
         Serial.begin(9600);
         pinMode(digitalPin, OUTPUT);
       }
-        
+
       void loop() {
         voltageValue = analogRead(analogInput);
         Serial.println(voltageValue); //Prints to serial monitor, used for debugging purposes
@@ -384,7 +384,7 @@ Updated: 09/06/2018 -->
         <li>In loop(), the last statement, myservo.write(val), writes an integer value ranging from 0 to 180 to set the servo speed. This correlates with the PWM duty cycle that is outputted from the pin. A value of 0 rotates full speed in one direction, and 180 is full speed in the other direction. A value of 90 means the servo will not turn in either direction. </li>
         <li>The two statements above myservo.write() read analog voltage from the pin the potentiometer is connected to and set the servo to a speed corresponding to that voltage value. The map(readValue, 0, 670, 0, 180) function takes in the readValue input, which ranges from 0 to 670, and scales it to an integer value between 0 and 180, which is returned. This allows the potentiometer to control the servo movement. </li>
       </ul>
-      
+
       <pre class="prettyprint"><code class="language-cpp">
         #include <Servo.h>
         int val = 90;
@@ -468,11 +468,11 @@ Updated: 09/06/2018 -->
           </div>
         </div>
         <li>For our code, we wrote a header file with the following movement commands:</li>
-        
+
       <pre class="prettyprint"><code class="language-cpp">
         // Stops the robot
         void stopMotors(Servo servo_L, Servo servo_R);
-        
+
         // Drives the robot forward
         void moveForward(Servo servo_L, Servo servo_R);
 
