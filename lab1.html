@@ -3,6 +3,8 @@
 website for Team 21
 Created: 08/29/2018
 Updated: 09/06/2018 -->
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
 
 <html lang="en">
 
@@ -165,13 +167,13 @@ Updated: 09/06/2018 -->
       </ul>
       <br>
       <p><u>All Arduino sketches require two functions:</u></p>
-      <code>void setup() {}</code>
+      <pre class="prettyprint"><code class="language-cpp">void setup() {}</code></pre>
       <ul class="list-bullet">
         <li>Called at the start of the entire program</li>
         <li>Used to initialize variables and setup I/O pins</li>
         <li>Only executes once</li>
       </ul>
-      <code>void loop() {}</code>
+      <pre class="prettyprint"><code class="language-cpp">void loop() {}</code></pre>
       <ul class="list-bullet">
         <li>Contains the main body of your program</li>
         <li>Loops forever</li>
@@ -179,32 +181,25 @@ Updated: 09/06/2018 -->
       <br>
       <p><u>Our example sketch code:</u></p>
 
-      <code>void setup() {
-        <br>
-        &nbsp &nbsp // initialize digital pin LED_BUILTIN as an output.
-        <br>
-        &nbsp &nbsp pinMode(LED_BUILTIN, OUTPUT);
-        <br>
-        }
-      </code>
+      <pre class="prettyprint"><code class="language-cpp">
+      void setup(){
+          // initialize digital pin LED_BUILTIN as an output.
+          pinMode(LED_BUILTIN, OUTPUT);
+      }
+      </code></pre>
       <ul class="list-bullet">
         <li>Instructs the Uno that the built-in LED should act as an output</li>
         <li>This allows us to write voltage values to turn the LED on and off</li>
       </ul>
-      <code>// the loop function runs over and over again forever
-            <br>
-            void loop() {
-            <br>
-            &nbsp &nbsp  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-            <br>
-            &nbsp &nbsp  delay(1000);                       // wait for a second
-            <br>
-            &nbsp &nbsp  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-            <br>
-            &nbsp &nbsp  delay(1000);                       // wait for a second
-            <br>
-            }
-      </code>
+      <pre class="prettyprint"><code class="language-cpp">
+    // the loop function runs over and over again forever
+    void loop() {
+      digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+      delay(1000);                       // wait for a second
+      digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+      delay(1000);                       // wait for a second
+    }
+      </code></pre>
       <ul class="list-bullet">
         <li>HIGH and LOW are global variables defined by Arduino, which correspond to logical high (on) and logical low (off)</li>
         <li>Since the LED_BUILTIN pin was set as an output, we can write these logical values to it</li>
@@ -229,24 +224,19 @@ Updated: 09/06/2018 -->
         <li>Below we show the LED blinking while connected to digital pin 0</li>
       </ul>
       <br>
-      <code>void setup() {
-        <br>
-        &nbsp &nbsp pinMode(0, OUTPUT);
-        <br>
-        }
-        <br>
-        void loop() {
-        <br>
-        &nbsp &nbsp digitalWrite(0, HIGH);   // turn the LED on (HIGH is the voltage level)
-        <br>
-        &nbsp &nbsp delay(1000);                 // wait for a second
-        <br>
-        &nbsp &nbsp digitalWrite(0, LOW);    // turn the LED off by making the voltage LOW
-        <br>
-        &nbsp &nbsp delay(1000);                  // wait for a second
-        <br>
+
+      <pre class="prettyprint"><code class="language-cpp">
+      void setup() {
+        pinMode(0, OUTPUT);
       }
-      </code>
+
+      void loop() {
+        digitalWrite(0, HIGH);   // turn the LED on (HIGH is the voltage level)
+        delay(1000);                 // wait for a second
+        digitalWrite(0, LOW);    // turn the LED off by making the voltage LOW
+        delay(1000);                  // wait for a second
+      }
+      </code></pre>
       <br>
       <div class="container">
         <div class="row">
@@ -273,9 +263,11 @@ Updated: 09/06/2018 -->
         <li>This resulting output is connected in series with a 300 ohm resistor to one of the Uno's analog pins</li>
         <li>The voltage values read by the analog pin are printed over the USB cable and displayed in the IDE’s serial monitor</li>
       </ul>
-      <code>int readValue = 0;
-            <br>int pinName = A0;
-      </code>
+
+      <pre class="prettyprint"><code class="language-cpp">
+      int readValue = 0;
+      int pinName = A0;
+      </code></pre>
       <ul>
         <li>Two variables are declared:</li>
         <ul>
@@ -284,9 +276,11 @@ Updated: 09/06/2018 -->
         </ul>
       </ul>
 
-      <code>void setup() {
-            <br> &nbsp &nbsp Serial.begin(9600);  }
-      </code>
+
+      <pre class="prettyprint"><code class="language-cpp">
+      void setup() {
+        Serial.begin(9600);  }
+      </code></pre>
       <ul>
         <li>In setup(), Serial.begin(9600) initializes the serial connection between the Arduino and the computer it is connected to</li>
         <ul>
@@ -295,11 +289,14 @@ Updated: 09/06/2018 -->
         </ul>
       </ul>
 
-      <code>void loop() {
-            <br> &nbsp &nbsp readValue = analogRead(pinName);
-            <br> &nbsp &nbsp Serial.println(readValue);
-            <br> &nbsp &nbsp delay(500); }
-      </code>
+
+      <pre class="prettyprint"><code class="language-cpp">
+      void loop() {
+        readValue = analogRead(pinName);
+        Serial.println(readValue);
+        delay(500);
+      }
+      </code></pre>
       <ul>
         <li>In loop(), analogRead returns the analog value from the potentiometer</li>
         <ul>
@@ -351,35 +348,25 @@ Updated: 09/06/2018 -->
         <li>To handle the range mismatch between analogRead() and analogWrite(),
           we divided the read values by four (seen in last line).</li>
       </ul>
-      <code>int analogInput = A0;
-        <br>
-        int digitalPin = 11;
-        <br>
-        int voltageValue = 0;
-        <br>
-        int delayTime = 500; //half a second
-        <br>
-        void setup() {
-        <br>
-        &nbsp &nbsp Serial.begin(9600);
-        <br>
-        &nbsp &nbsp pinMode(digitalPin, OUTPUT);
-        <br>
-        }
-        <br>
-        void loop() {
-        <br>
-        &nbsp &nbsp voltageValue = analogRead(analogInput);
-        <br>
-        &nbsp &nbsp Serial.println(voltageValue); //Prints to serial monitor, used for debugging purposes
-        <br>
-        &nbsp &nbsp delay(delayTime);
-        <br>
-        &nbsp &nbsp analogWrite(digitalPin, voltageValue/4);
-        <br>
-        }
-        <br>
-      </code>
+
+      <pre class="prettyprint"><code class="language-cpp">
+      int analogInput = A0;
+      int digitalPin = 11;
+      int voltageValue = 0;
+      int delayTime = 500; //half a second
+
+      void setup() {
+        Serial.begin(9600);
+        pinMode(digitalPin, OUTPUT);
+      }
+
+      void loop() {
+        voltageValue = analogRead(analogInput);
+        Serial.println(voltageValue); //Prints to serial monitor, used for debugging purposes
+        delay(delayTime);
+        analogWrite(digitalPin, voltageValue/4);
+      }
+      </code></pre>
       <br>
       <p><u>Demo:</u></p>
       <center>
@@ -397,33 +384,24 @@ Updated: 09/06/2018 -->
         <li>In loop(), the last statement, myservo.write(val), writes an integer value ranging from 0 to 180 to set the servo speed. This correlates with the PWM duty cycle that is outputted from the pin. A value of 0 rotates full speed in one direction, and 180 is full speed in the other direction. A value of 90 means the servo will not turn in either direction. </li>
         <li>The two statements above myservo.write() read analog voltage from the pin the potentiometer is connected to and set the servo to a speed corresponding to that voltage value. The map(readValue, 0, 670, 0, 180) function takes in the readValue input, which ranges from 0 to 670, and scales it to an integer value between 0 and 180, which is returned. This allows the potentiometer to control the servo movement. </li>
       </ul>
-      <code>
+
+      <pre class="prettyprint"><code class="language-cpp">
         #include <Servo.h>
-        <br>
         int val = 90;
-        <br>
         int readValue = 0;
-        <br>
         int pinName = A0;
-        <br>
         Servo myservo;
-        <br>
+
         void setup() {
-        <br>
-        &nbsp &nbsp myservo.attach(3);
-        <br>
+          myservo.attach(3);
         }
-        <br>
+
         void loop() {
-        <br>
-        &nbsp &nbsp readValue = analogRead(pinName);
-        <br>
-        &nbsp &nbsp val = map(readValue, 0, 670, 0, 180);
-        <br>
-        &nbsp &nbsp myservo.write(val);
-        <br>
+          readValue = analogRead(pinName);
+          val = map(readValue, 0, 670, 0, 180);
+          myservo.write(val);
         }
-      </code>
+      </code></pre>
       <br>
       <p><u>Demo:</u></p>
       <center>
@@ -489,28 +467,30 @@ Updated: 09/06/2018 -->
             </div>
           </div>
         </div>
-        <br>
-        <p><u>For our code, we wrote a header file with the following movement commands:</u></p>
-        <code>// Stops the robot
-        <br>void stopMotors(Servo servo_L, Servo servo_R);
-        <br><br>// Drives the robot forward
-        <br>void moveForward(Servo servo_L, Servo servo_R);
+        <li>For our code, we wrote a header file with the following movement commands:</li>
 
-        <br><br>// Drives the robot backward
-        <br>void moveBackward(Servo servo_L, Servo servo_R);
+      <pre class="prettyprint"><code class="language-cpp">
+        // Stops the robot
+        void stopMotors(Servo servo_L, Servo servo_R);
 
-        <br><br>// Turns the robot right slightly, based on [amount]
-        <br>void adjustRight(Servo servo_L, Servo servo_R, int amount);
+        // Drives the robot forward
+        void moveForward(Servo servo_L, Servo servo_R);
 
-        <br><br>// Turns the robot left slightly, based on [amount]
-        <br>void adjustLeft(Servo servo_L, Servo servo_R, int amount);
+        // Drives the robot backward
+        void moveBackward(Servo servo_L, Servo servo_R);
 
-        <br><br>// Turns the robot 90 degrees right, in place
-        <br>void turnRight(Servo servo_L, Servo servo_R);
+        // Turns the robot right slightly, based on [amount]
+        void adjustRight(Servo servo_L, Servo servo_R, int amount);
 
-        <br><br>// Turns the robot 90 degrees left, in place
-        <br>void turnLeft(Servo servo_L, Servo servo_R);
-        </code>
+        // Turns the robot left slightly, based on [amount]
+        void adjustLeft(Servo servo_L, Servo servo_R, int amount);
+
+        // Turns the robot 90 degrees right, in place
+        void turnRight(Servo servo_L, Servo servo_R);
+
+        // Turns the robot 90 degrees left, in place
+        void turnLeft(Servo servo_L, Servo servo_R);
+        </code></pre>
 
         <p>By running these commands sequentially with delays, we can program
           our robot to move around in arbitrary patterns. We used these functions
