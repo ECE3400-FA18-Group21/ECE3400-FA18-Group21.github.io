@@ -148,6 +148,7 @@ Updated: 09/06/2018 -->
         <li>1 Solderless breadboard</li>
       </ul>
       <hr>
+
       <h4 class="page-header text-left">Part 1 — Communicating Between the Uno and the IDE</h4>
       <ul>
         <li>Install Arduino IDE → <a class="_blank" href="https://www.arduino.cc/en/Main/Software">Download Link</a></li>
@@ -188,7 +189,6 @@ Updated: 09/06/2018 -->
             <br>
             }
       </code>
-
       <ul class="list-bullet">
         <li>HIGH and LOW are global variables defined by Arduino, which correspond to logical high (on) and logical low (off)</li>
         <li>Since the LED_BUILTIN pin was set as an output, we can write these logical values to it</li>
@@ -196,22 +196,19 @@ Updated: 09/06/2018 -->
       </ul>
       <br>
       <p><u>All Arduino sketches require two functions:</u></p>
-
       <code>void setup() {}</code>
       <ul class="list-bullet">
         <li>Called at the start of the entire program</li>
         <li>Used to initialize variables and setup I/O pins</li>
         <li>Only executes once</li>
       </ul>
-
       <code>void loop() {}</code>
       <ul class="list-bullet">
         <li>Contains the main body of your program</li>
         <li>Loops forever</li>
       </ul>
-
-
       <hr>
+
       <h4 class="page-header text-left">Part 2 — Modify the Blink Sketch</h4>
       <ul>
         <li>We connected an LED to each of the digital pins to ensure that they work. We ensured that the we would not burn out the pins by connecting the LED’s in series with a 300 ohm resistor.</li>
@@ -250,6 +247,7 @@ Updated: 09/06/2018 -->
         </div>
       </div>
       <hr>
+
       <h4 class="page-header text-left">Part 3 — The Serial Monitor and the Analog Pins</h4>
       <ul>
         <li>Connect a potentiometer in parallel with a resistor</li>
@@ -310,9 +308,8 @@ Updated: 09/06/2018 -->
           </div>
         </div>
       </div>
-
-
       <hr>
+
       <h4 class="page-header text-left">Part 4 — Analog Output</h4>
       <ul>
         <li>The Arduino can only output digital signals.</li>
@@ -364,7 +361,6 @@ Updated: 09/06/2018 -->
       <ul>
         <li>Create linear map from analogRead → analogWrite by dividing by 4.</li>
       </ul>
-
       <hr>
 
       <h4 class="page-header text-left">Part 5 — Parallax Servos</h4>
@@ -403,13 +399,30 @@ Updated: 09/06/2018 -->
         <br>
         }
       </code>
-
       <hr>
-      <h4 class="page-header text-left">Part 6 — Assembling and Running Our Robot</h4>
 
+      <h4 class="page-header text-left">Part 6 — Assembling and Running Our Robot</h4>
       <ul class="list-bullet">
-        <li></li>
+        <li>This week we also assembled our robot and implemented basic autonomous movement</li>
+        <li>We built our robot using the 3D-printed and laser-etched parts sitting in the lab room, including:</li>
+        <ul class="list-bullet">
+          <li>1 robot base (the large aqua platform in the image)</li>
+          <li>1 Arduino Uno</li>
+          <li>1 rechargeable battery</li>
+          <li>1 solderless breadboard</li>
+          <li>2 servo mounts</li>
+          <li>2 Parallax continuous rotation servos</li>
+          <li>2 ball bearings with connectors</li>
+          <li>2 wheels</li>
+          <li>3 rubber bands</li>
+          <li>3 Pololu QTR-1A Reflectance Sensors</li>
+          <li>Various wires, screws, nuts, and spacers</li>
+        </ul>
+        <li>The construction of the robot was tedious and time-consuming</li>
+        <li>We modeled our prototype off of last year’s designs (found on their websites)</li>
+        <li>See the images below for a detailed overview of the design</li>
       </ul>
+
     </div>
 
     <!-- Footer -->
