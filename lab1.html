@@ -2,7 +2,7 @@
 <!-- ECE 3400 | Fall 2018
 website for Team 21
 Created: 08/29/2018
-Updated: 09/02/2018 -->
+Updated: 09/06/2018 -->
 
 <html lang="en">
 
@@ -75,7 +75,7 @@ Updated: 09/02/2018 -->
                   Labs
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="lab1.html">Lab 1</a>
+                <a class="dropdown-item" href="lab1.html#report">Lab 1</a>
                 <a class="dropdown-item" href="lab2.html">Lab 2</a>
                 <a class="dropdown-item" href="lab3.html">Lab 3</a>
                 <a class="dropdown-item" href="lab4.html">Lab 4</a>
@@ -86,7 +86,7 @@ Updated: 09/02/2018 -->
                   Links
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="team-contract.html">Team Contract</a>
+                <a class="dropdown-item" href="team-contract.html#contract">Team Contract</a>
                 <a class="dropdown-item" href="meeting-minutes.html">Meeting Minutes</a>
                 <a class="dropdown-item" href="#">TBD 3</a>
                 <a class="dropdown-item" href="#">TBD 4</a>
@@ -104,16 +104,142 @@ Updated: 09/02/2018 -->
     <header class="masthead">
       <div class="container">
         <div class="intro-text">
-          <div class="intro-lead-in">Team 21</div>
-          <div class="intro-heading text-uppercase">The Smart Bet</div>
-          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>
+          <div class="intro-lead-in">Lab 1</div>
+          <div class="intro-heading text-uppercase">Microcontrollers</div>
+          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#report">Read the Report</a>
         </div>
       </div>
     </header>
 
     <!--THIS IS WHERE THE TEXT WILL GO-->
-    <div class="container">
+    <div class="container" id="report">
+      <br><br>
+      <h1 class="page-header text-center">Lab 1</h1>
+      <hr>
+      <h4 class="page-header text-left">Lab Goals</h4>
+      <p>Learn basic functionalities of the Arduino Uno, the Arduino IDE, and
+        the GitHub repository. In particular, focus on writing a program to
+        control multiple external components connected to the Arduino Uno. At
+        the end of the lab, put together a robot and have it perform a simple
+        autonomous task.
+      </p>
+      <h4 class="page-header text-left">Prelab</h4>
+      <ul class="list-bullet">
+        <li>Setup GitHub accounts and create team website</li>
+        <li>Review the <a class="_blank" href="https://www.arduino.cc/reference/en/">Arduino Reference</a></li>
+        <li>Review documentation for the <a class="_blank" href="https://www.parallax.com/sites/default/files/downloads/900-00008-Continuous-Rotation-Servo-Documentation-v2.2.pdf">Parallax Continuous Rotation Servo</a></li>
+      </ul>
+      <h4 class="page-header text-left">Sub-Teams</h4>
+      <p>To begin, we split into two groups of two. Each group progressed
+        through the lab individually, as described below.
+      </p>
+      <ul class="list-bullet">
+        <li>Brian and Tyler</li>
+        <li>Eric and Kenneth</li>
+      </ul>
+      <h4 class="page-header text-left">Materials Used</h4>
+      <ul>
+        <li>1 Arduino Uno</li>
+        <li>1 USB A/B cable</li>
+        <li>1 Continuous rotation servo</li>
+        <li>1 LED (not IR)</li>
+        <li>1 Potentiometer</li>
+        <li>Several resistors (kΩ range)</li>
+        <li>1 Solderless breadboard</li>
+      </ul>
+      <hr>
+      <h4 class="page-header text-left">Part 1 — Communicating Between the Uno and the IDE</h4>
+      <ul>
+        <li>Install Arduino IDE → <a class="_blank" href="https://www.arduino.cc/en/Main/Software">Download Link</a></li>
+        <li>We first tested the example code “Blink”</li>
+        <ul>
+          <li>This example can be found under: File > Examples > 1.Basics > Blink</li>
+          <li>An Arduino program is known as a “sketch”</li>
+        </ul>
+        <li>In the IDE, click checkmark to compile the code</li>
+        <li>In the IDE, click right-pointing arrow to upload (program) the Uno</li>
+        <ul>
+          <li>If the LED does not blink, check under Tools > Serial Port list to make sure that the Uno is connected to the correct COM port</li>
+        </ul>
+      </ul>
+      <code>void setup() {
+        <br>
+        &nbsp &nbsp // initialize digital pin LED_BUILTIN as an output.
+        <br>
+        &nbsp &nbsp pinMode(LED_BUILTIN, OUTPUT);
+        <br>
+        }
+      </code>
+      <ul class="list-bullet">
+        <li>Instructs the Uno that the built-in LED should act as an output</li>
+        <li>This allows us to write voltage values to turn the LED on and off</li>
+      </ul>
+      <code>// the loop function runs over and over again forever
+            <br>
+            void loop() {
+            <br>
+            &nbsp &nbsp  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+            <br>
+            &nbsp &nbsp  delay(1000);                       // wait for a second
+            <br>
+            &nbsp &nbsp  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+            <br>
+            &nbsp &nbsp  delay(1000);                       // wait for a second
+            <br>
+            }
+      </code>
+
+      <ul class="list-bullet">
+        <li>HIGH and LOW are global variables defined by Arduino, which correspond to logical high (on) and logical low (off)</li>
+        <li>Since the LED_BUILTIN pin was set as an output, we can write these logical values to it</li>
+        <li>The program delays for 1 second in between each high / low write (time units are in ms → 1000 ms = 1 second)</li>
+      </ul>
       <br>
+      <p><u>All Arduino sketches require two functions:</u></p>
+
+      <code>void setup() {}</code>
+      <ul class="list-bullet">
+        <li>Called at the start of the entire program</li>
+        <li>Used to initialize variables and setup I/O pins</li>
+        <li>Only executes once</li>
+      </ul>
+
+      <code>void loop() {}</code>
+      <ul class="list-bullet">
+        <li>Contains the main body of your program</li>
+        <li>Loops forever</li>
+      </ul>
+
+
+
+
+      <hr>
+      <h4 class="page-header text-left">Part 2 — Modify the Blink Sketch</h4>
+      <hr>
+      <h4 class="page-header text-left">Part 3 — The Serial Monitor and the Analog Pins</h4>
+      <hr>
+      <h4 class="page-header text-left">Part 4 — Analog Output</h4>
+      <hr>
+      <h4 class="page-header text-left">Part 5 — Parallax Servos</h4>
+      <hr>
+      <h4 class="page-header text-left">Part 6 — Assembling and Running Our Robot</h4>
+
+      <ul class="list-bullet">
+        <li></li>
+      </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
       <h1 class="page-header">Hello, world! <small>Secondary text</small></h1>
       <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua.</p>
