@@ -106,18 +106,108 @@ Updated: 09/13/2018 -->
       <div class="container">
         <div class="intro-text">
           <div class="intro-lead-in">Milestone 1</div>
-          <div class="intro-heading text-uppercase">Line Following &amp Figure Eight</div>
+          <div class="intro-heading text-uppercase">Line Following &amp Figure 8</div>
           <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#report">Read the Report</a>
         </div>
       </div>
     </header>
 
     <!--THIS IS WHERE THE TEXT WILL GO-->
+
     <div class="container" id="report">
       <br><br>
       <h1 class="page-header text-center">Milestone 1</h1>
-      <h4 class="page-header text-left">Part 1 — Communicating Between the Uno and the IDE</h4>
+      <hr>
+      <h4 class="page-header text-left">Milestone Goals</h4>
+      <p>Integrate line sensors with the robot so that it can follow a line. Then, program the robot to follow a figure eight pattern along a rectangular grid in a robust manner.
+      </p>
+      <h4 class="page-header text-left">Line Tracking Algorithm</h4>
+      <ul class="list-bullet">
+        <li>We used three line sensors in a row to perform line tracking. We read the output of the three line sensors using analogRead() on pins A0, A1, and A2</li>
+        <li>These values ranged roughly from 0-1000, with 800-1000 corresponding to the dark floor, and 0-200 corresponding to white line readings.</li>
+        <li>We wrote a checkSensors() function that reads all of the sensors, and outputs a 1 if the reading is above a threshold, and outputs a 0 if the reading is below. It returns an array of size three. (ex: [1,0,1] if the line is on the middle sensor only)</li>
+        <ul>
+          <li>The threshold we use is 500, which is well in between the ranges for dark and light sensor readings. This can be adjusted for different lighting conditions.</li>
+        </ul>
+      </ul>
+      <pre class="prettyprint"><code class="language-cpp">
+      unsigned int * checkSensors() {
+        static unsigned int sensorValues[NUM_SENSORS]; //declare output array
+        sensorValues[0] = analogRead(A0);
+        sensorValues[1] = analogRead(A1);
+        sensorValues[2] = analogRead(A2);
+  
+        for (unsigned int i = 0; i < NUM_SENSORS; i++) {
+          if (sensorValues[i] < THRESHOLD)
+          sensorValues[i] = 0; //Sees Bright Line
+        else
+          sensorValues[i] = 1; //Sees Dark Background
+        }
+        return sensorValues;
+      }
+      </code></pre>
+      <ul>
+        <li>To track the line, we poll the sensors using checkSensors(). If the robot is leaning left, then the first value in the array will be 0. If that is the case, we call our adjustRight(servo_L, servo_R, amount) function to turn the robot slightly right as it moves forward. We can tune the strength of this adjustment by changing the amount value, which can range from 0-90. Similarly, if the robot is leaning right, based on reading the last value of the sensorStatus array, we call adjustLeft(servo_L, servo_R, amount). Otherwise, if we have the desired [1,0,1] reading, we continue going forward.</li>
+      </ul>
+
+      <br>
+      <p><u>Demo:</u></p>
+      <div class="embed-responsive embed-responsive-21by9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/F0Ypx1ol_bY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <hr>
+
+      <h4 class="page-header text-left">Figure 8</h4>
+      <ul class="list-bullet">
+        <li>We used our turnRight(servo_L, servo_R), turnLeft(servo_L, servo_R), and moveForward(servo_L, servo_R) functions to write two new motor functions: turnRightIntersection(servo_L, servo_R) and turnLeftIntersection(servo_L, servo_R). When the robot hits an intersection, these two functions will move forward slightly and then perform an in-place 90 degree turn, such that the sensors are realigned with the grid after the turn at intersection.</li>
+        
+      </ul>
+      <br>
+      <pre class="prettyprint"><code class="language-cpp">
+      void stopMotors(Servo servo_L, Servo servo_R){
+        servo_R.write(90);
+        servo_L.write(90);
+      }
+
+      void moveForward(Servo servo_L, Servo servo_R){
+        servo_R.write(180);
+        servo_L.write(30);
+      }
+
+      void adjustRight(Servo servo_L, Servo servo_R, int amount){
+        servo_R.write(180 - amount);
+        servo_L.write(0);
+      }
+
+      void turnRight(Servo servo_L, Servo servo_R){
+        servo_R.write(180);
+        servo_L.write(180);
+        delay(550);
+        stopMotors(servo_L, servo_R);
+      }
+
+      void turnRightIntersection(Servo servo_L, Servo servo_R){
+        moveForward(servo_L, servo_R);
+        delay(350);
+        stopMotors(servo_L, servo_R);
+        turnRight(servo_L, servo_R);
+      }
+      </code></pre>
+      <ul class="list-bullet">
+        <li>In order to create the figure-eight pattern, we added a turnCount variable. A figure-eight on the grid consists of 8 turns (4 left followed by 4 right, assuming we start in the middle). Thus, the turnCount variable would increment from 0-7, and if it is less than 4, the robot turns left at the next intersection, and otherwise turns right at the next intersection.</li>
+        <ul>
+          <li>We check the sensors via polling, as there is very little other logic going on in the loop.</li>
+          <li>If we are not yet at an intersection (in other words checkSensors() does not return [0,0,0]) then we use our line tracking algorithm from the previous section.</li>
+          <li>The turns are based on delays only, and we rely on our robust line tracking algorithm to get the robot back on track if the turns are a little off. We anticipate that once our robot has more tasks to manage, a turn will be implemented with a hardware interrupt from the middle line sensor.</li>
+        </ul>
+      </ul>
+      <br>
+      <p><u>Demo:</u></p>
+      <div class="embed-responsive embed-responsive-21by9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/uMZlSQueVeg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
     </div>
+    <hr>
 
 
     <!-- Footer -->
