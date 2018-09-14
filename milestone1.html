@@ -136,7 +136,7 @@ Updated: 09/13/2018 -->
         sensorValues[0] = analogRead(A0);
         sensorValues[1] = analogRead(A1);
         sensorValues[2] = analogRead(A2);
-  
+
         for (unsigned int i = 0; i < NUM_SENSORS; i++) {
           if (sensorValues[i] < THRESHOLD)
           sensorValues[i] = 0; //Sees Bright Line
@@ -157,10 +157,10 @@ Updated: 09/13/2018 -->
       </div>
       <hr>
 
-      <h4 class="page-header text-left">Figure 8</h4>
+      <h4 class="page-header text-left">Figure 8 Traversal</h4>
       <ul class="list-bullet">
         <li>We used our turnRight(servo_L, servo_R), turnLeft(servo_L, servo_R), and moveForward(servo_L, servo_R) functions to write two new motor functions: turnRightIntersection(servo_L, servo_R) and turnLeftIntersection(servo_L, servo_R). When the robot hits an intersection, these two functions will move forward slightly and then perform an in-place 90 degree turn, such that the sensors are realigned with the grid after the turn at intersection.</li>
-        
+
       </ul>
       <br>
       <pre class="prettyprint"><code class="language-cpp">
