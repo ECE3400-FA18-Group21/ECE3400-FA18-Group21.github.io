@@ -146,11 +146,27 @@ Updated: 09/13/2018 -->
         return sensorValues;
       }
       </code></pre>
-      <ul>
-        <li>To track the line, we poll the sensors using checkSensors(). If the robot is leaning left, then the first value in the array will be 0. If that is the case, we call our adjustRight(servo_L, servo_R, amount) function to turn the robot slightly right as it moves forward. We can tune the strength of this adjustment by changing the amount value, which can range from 0-90. Similarly, if the robot is leaning right, based on reading the last value of the sensorStatus array, we call adjustLeft(servo_L, servo_R, amount). Otherwise, if we have the desired [1,0,1] reading, we continue going forward.</li>
-      </ul>
 
-      <br>
+        <div class="row">
+          <div class="col-md-9">
+            <ul>
+              <li>To track the line, we poll the sensors using checkSensors()</li>
+              <li>If the robot is leaning left, then the first value in the array will be 0</li>
+              <li>If that is the case, we call our adjustRight(servo_L, servo_R, amount) function to turn the robot slightly right as it moves forward</li>
+              <li>We can tune the strength of this adjustment by changing the amount value, which can range from 0-90</li>
+              <li>Similarly, if the robot is leaning right, based on reading the last value of the sensorStatus array, we call adjustLeft(servo_L, servo_R, amount)</li>
+              <li>Otherwise, if we have the desired [1,0,1] reading, we continue going forward</li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <div class="thumbnail">
+              <img src="img/milestone1/lineSensor.png" style="width:100%">
+              <div class="caption text-center">
+                <p>Line sensor algorithm</p>
+              </div>
+            </div>
+          </div>
+        </div>
       <p><u>Demo:</u></p>
       <div class="embed-responsive embed-responsive-21by9">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/F0Ypx1ol_bY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -171,7 +187,7 @@ Updated: 09/13/2018 -->
 
       void moveForward(Servo servo_L, Servo servo_R){
         servo_R.write(180);
-        servo_L.write(30);
+        servo_L.write(30); //set to 30 instead of 0 to account for differences in wheel geometries
       }
 
       void adjustRight(Servo servo_L, Servo servo_R, int amount){
@@ -201,7 +217,6 @@ Updated: 09/13/2018 -->
           <li>The turns are based on delays only, and we rely on our robust line tracking algorithm to get the robot back on track if the turns are a little off. We anticipate that once our robot has more tasks to manage, a turn will be implemented with a hardware interrupt from the middle line sensor.</li>
         </ul>
       </ul>
-      <br>
       <p><u>Demo:</u></p>
       <div class="embed-responsive embed-responsive-21by9">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/uMZlSQueVeg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
