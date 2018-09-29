@@ -151,7 +151,7 @@ Updated: 09/29/2018 -->
       <p>Both the Acoustic and Optical parts of this lab used Fast Fourier
         Transforms (FFT) to determine the frequency components of the sampled
         input signal from the sensors. <b>FFT ALGORITHM EXPLANATION.</b>
-        <br><br>
+        <br>
         The FFT algorithm was implemented using Open Music Labs Arduino FFT
         Library. By default, the library takes in an analog signal from Arduino
         pin A0, samples it at 256 equally spaced intervals, and returns an array
@@ -159,7 +159,30 @@ Updated: 09/29/2018 -->
         over a small range of frequencies. Since the FFT of a real signal is
         symmetric over zero, only half of the outputs are unique, and thus 128
         bins are returned (not 256).
-        <br><br>
+        <br>
+        The FFT code can be modified to alter the performance of the ADC
+        (information from the ADC section of the ATmega328 datasheet [page 305]).
+        The important ADC characteristics are:
+        <ul>
+        	<li>10-bit resolution</li>
+        	<li>ADC clock is dependent on chosen prescalar, which is set based upon last 3 bits of ADCSRA register</li>
+        	<li>The default FFT code sets the ADC prescaler = 32</li>
+        	<ul>
+        		<li>Prescalar = 128 -> maps to clock of 125 kHz</li>
+        		<li>Prescalar = 64 -> maps to clock of 250 kHz</li>
+        		<li>Prescalar = 32 -> maps to clock of 1 MHz</li>
+        		<li>Prescalar = 16 -> maps to clock of 2 MHz</li>
+        		<li>Prescalar = 8 -> maps to clock of 4 MHz</li>
+        		<li>Prescalar = 4 -> maps to clock of 8 MHz</li>
+        		<li>NOTE - at frequencies higher than 250 kHz the 10-bit accuracy degrades</li>
+        	</ul>
+        	<li>A normal conversion takes 13 ADC clock cycles</li>
+        	<li>Sampling frequency = clock rate divided by number of cycles</li>
+        	<ul>
+        		<li>Fs = clock rate/cycles</li>
+        		<li>Fs = 125000/13 = 9615 Hz</li>
+        	</ul>
+        </ul>
         To test and visualize the data, we used the example code "fft_adc_serial,"
         which prints the FFT magnitude data to the serial monitor. We then copied
         the data into Excel, and wrote a simple MATLAB script to read in and plot
@@ -167,6 +190,7 @@ Updated: 09/29/2018 -->
       </p>
       <hr>
       <h3 class="page-header text-center">Acoustic Team</h3>
+      <p><u>GOAL: use an Arduino and the FFT library to detect a 660 Hz whistle blow</u></p>
       <h4 class="page-header text-left">Materials Used</h4>
       <ul>
         <li>1 × Arduino Uno</li>
@@ -184,10 +208,182 @@ Updated: 09/29/2018 -->
         <li>2 × 680 kΩ resistor</li>
         <li>1 Solderless breadboard</li>
       </ul>
+      <h4 class="page-header text-left">Testing the Microphone - Datasheet Circuit</h4>
+      <ul>
+      	<li>First, we built the recommended circuit from the datasheet to connect the microphone to the Arduino</li>
+      	<ul>
+      		<li>1 × 1 μF Capacitor</li>
+      		<li>1 × 3.3 kΩ resistor</li>
+      	</ul>
+      	<div class="container">
+      		<div class="row">
+            <div class="col-md-2">
+      			</div>
+      			<div class="col-md-3">
+      				<div class="thumbnail">
+                <img src="img/lab2/mic_datasheet.png" style="width:100%">
+              </div>
+      			</div>
+            <div class="col-md-2">
+            </div>
+      			<div class="col-md-3">
+      				<div class="thumbnail">
+                <img src="img/lab2/mic_datasheet_photo.jpg" style="width:100%">
+              </div>
+      			</div>
+            <div class="col-md-2">
+            </div>
+      		</div>
+      	</div>
+      	<li>We used the previously mentioned website to generate a 660 Hz tone</li>
+      	<li>Results shown by the oscilloscope indicate a response, although the waveform amplitude is relatively small</li>
+      	<ul>
+      		<li>DC bias ~3mV</li>
+      		<li>Peak-to-peak ~40mV</li>
+      		<ul>
+      			<li>That is with the source right next to the microphone</li>
+      			<li>Clearly, we need to amplify the output</li>
+      		</ul>
+      	</ul>
+      	<div class="container">
+      		<div class="row">
+      			<div class="col-md-3">
+      				<div class="thumbnail">
+                <img src="img/lab2/mic_no_amp.png" style="width:100%">
+              </div>
+      			</div>
+      			<div class="col-md-9">
+      			</div>
+      		</div>
+      	</div>
+        </ul>
+      </ul>
+
+      <h4 class="page-header text-left">Testing the Microphone - Amplifier Circuit</h4>
+      <ul>
+        <li>As mentioned earlier, we use the Open Labs Arduino FFT Library for calculating the FFT</li>
+	        <li>To increase the accuracy of our readings, we altered the ADC prescaler value</li>
+        	<ul>
+        		<li><u>Original:</u> prescaler = 32 -> maps to clock of 1 MHz</li>
+        		<li><u>Modified:</u> prescaler = 128 -> maps to clock of 125 kHz</li>
+        	</ul>
+        	<li>The original code had:
+        	<ul>
+        		<li>First set line: ADCSRA = 0xe5</li>
+        		<li>Second set line: ADCSRA = 0xf5</li>
+        	</ul>
+        	<li>Our modified code is:</li>
+          <pre class="prettyprint"><code class="language-cpp">
+          void setup() {
+            Serial.begin(115200);                     // use the serial port
+            TIMSK0 = 0;                               // turn off timer0 for lower jitter - delay() and millis() killed
+            ADCSRA = 0xe7;                            // set the adc to free running mode, set prescaler=128 (default e5=32)
+            ADMUX = 0x40;                             // use adc0
+            DIDR0 = 0x01;                             // turn off the digital input for adc0
+          }
+          void loop() {
+            while(1) {                                // reduces jitter
+              cli();                                  // UDRE interrupt slows this way down on arduino1.0
+              for (int i = 0 ; i < 512 ; i += 2) {    // save 256 samples
+                while(!(ADCSRA & 0x10));              // wait for adc to be ready
+                ADCSRA = 0xf7;                        // restart adc --> set prescaler=f7=128 (default f5=32)
+          </code></pre>
+          <li>Next, we calculated which bin we would expect to find the 660 Hz signal in</li>
+          <ul>
+          	<li>ADC clock = 125 kHz</li>
+          	<li>ADC sampling = 13 clock cycles per read</li>
+          	<li>ADC sampling = 125 kHz/13 = 9,615.38 Hz</li>
+          	<li>Number of Samples = 256</li>
+          	<li>Bin Size = 9,615.38/256 = 37.56 Hz/bin</li>
+          	<li>Bin for 660 Hz = 660/37.56 = 17.57 --> Bin 18</li>
+          </ul>
+          <li>CIRCUIT DESIGN EXPLANATION</li>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-1">
+              </div>
+              <div class="col-md-4">
+                <div class="thumbnail">
+                  <img src="img/lab2/Mic_amp_1.jpg" style="width:100%">
+                </div>
+              </div>
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-4">
+                <div class="thumbnail">
+                  <img src="img/lab2/Mic_amp_2.jpg" style="width:100%">
+                </div>
+              </div>
+              <div class="col-md-1">
+              </div>
+            </div>
+          </div>
+          <li>CIRCUIT TESTING</li>
+          <li>Integration into software</li>
+          <ul>
+            <li>We created a function "detect_660hz"</li>
+            <ul>
+              <li>Runs FFT function with prescaler = 128</li>
+              <li>Checks bins 18 AND 19</li>
+              <li>If magnitudes are both greater than a defined threshold -> returns TRUE</li>
+            </ul>
+            <pre class="prettyprint"><code class="language-cpp">
+            /**
+             * [detect_660hz]
+             * OUTPUT = returns TRUE if a 660hz signal is detected by the Arduino,
+             *          & FALSE otherwise
+             * Uses THRESHOLD to determine whether the tone is playing or not
+             */
+            bool detect_660hz(){
+                byte * fft_log_out = get_fft_bins();
+                if (fft_log_out[17] > THRESHOLD && fft_log_out[18] > THRESHOLD) //bins 18 & 19, but 0 based so subtract 1
+                    return true;
+                else
+                    return false;
+            }
+            </code></pre>
+            <li>To test "detect_660hz", we wrote a simple sketch</li>
+            <ul>
+              <li>Every time through the loop, "detect_660hz" is run</li>
+              <li>To prevent a stray audio source from setting off our robot, a counter is used</li>
+              <li>If and only if "detect_660hz" returns true 6 times in a row --> then the robot will start</li>
+              <li>We showed this by turning the internal LED on</li>
+            </ul>
+            <pre class="prettyprint"><code class="language-cpp">
+              #include "mic.h"
+              #include "ir_hat.h"
+              int counter = 0;
+
+              void setup() {
+                Serial.begin(9600);
+                pinMode(LED_BUILTIN, OUTPUT);
+                fft_setup();
+              }
+              void loop() {
+                int count = 0;
+                Serial.println(detect_660hz());
+                if(detect_660hz())
+                  counter++;
+                else
+                  counter = 0;
+                if(counter>6)
+                  digitalWrite(LED_BUILTIN, HIGH);
+                else
+                  digitalWrite(LED_BUILTIN, LOW);
+              }
+            </code></pre>
+            <li>EMBED VIDEO IMG_8204.m4v HERE</li>
+      </ul>
+
       <hr>
       <h3 class="page-header text-center">Optical Team</h3>
       <p><u>GOAL: use an Arduino and the FFT library to detect another robot
-        emitting IR at 6.08kHz and ignore decoys (18kHz)</u></p>
+        emitting IR at 6.08 kHz and ignore decoys (18 kHz)</u></p>
       <h4 class="page-header text-left">Materials Used</h4>
       <ul>
         <li>1 × Arduino Uno</li>
