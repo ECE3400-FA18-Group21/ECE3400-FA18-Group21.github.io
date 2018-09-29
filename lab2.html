@@ -2,7 +2,7 @@
 <!-- ECE 3400 | Fall 2018
 website for Team 21
 Created: 08/29/2018
-Updated: 09/06/2018 -->
+Updated: 09/29/2018 -->
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
 
 <html lang="en">
@@ -105,240 +105,228 @@ Updated: 09/06/2018 -->
     <header class="masthead">
       <div class="container">
         <div class="intro-text">
-          <div class="intro-lead-in">Team 21</div>
-          <div class="intro-heading text-uppercase">The Smart Bet</div>
-          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#report">Tell Me More</a>
+          <div class="intro-lead-in">Lab 2</div>
+          <div class="intro-heading text-uppercase">Analog Circuitry & FFTs</div>
+          <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#report">Read the Report</a>
         </div>
       </div>
     </header>
 
     <!--THIS IS WHERE THE TEXT WILL GO-->
     <div class="container" id="report">
-      <br>
-      <h1 class="page-header">Hello, world! <small>Secondary text</small></h1>
-      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua.</p>
-      <p><mark>Lorem ipsum dolor sit amet</mark>, consectetur adipisicing elit, sed do eiusmod
-      tempor <del>incididunt ut labore</del> et dolore magna aliqua. Ut enim ad minim veniam,
-      quis nostrud exercitation <u>ullamco laboris nisi</u> ut aliquip ex ea commodo
-      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-      non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
+      <br><br>
+      <h1 class="page-header text-center">Lab 2</h1>
       <hr>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- ALIGNMENT & TRANSFORMATION-->
-        <p class="text-left text-lowercase">Left aligned text.</p>
-        <p class="text-center text-uppercase">Center aligned text.</p>
-        <p class="text-right text-capitalize">Right aligned text.</p>
-        <p class="text-justify">Justified text.</p>
-        <p class="text-nowrap">No wrap text.</p>
-
-        <!-- QUICK FLOATS -->
-        <div class="pull-right">Div floated to right</div>
-        <div class="pull-left">Div floated to left</div>
-
-        <!-- CLEAR FLOAT -->
-        <div class="clearfix"></div>
-
-        <hr>
-
-        <!-- BLOCKQUOTE -->
-        <blockquote class="blockquote-reverse">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-           <footer>Quote by <cite title="John Doe">John Doe</cite></footer>
-        </blockquote>
-
-        <hr>
-
-        <!-- LISTS -->
-        <ul class="list-unstyled">
-          <li>Item One</li>
-          <li>Item Two</li>
-          <li>Item Three</li>
-          <li>Item Four</li>
+      <h4 class="page-header text-left">Lab Goals</h4>
+      <p>Test and familiarize yourself with the sensors and signal
+        processing needed for your robot to detect acoustic and
+        optical signals and interface with the Arduino Uno. The
+        Acoustic sub-team will work on the microphone circuit, which
+        will detect a 660 Hz whistle blow, signifying the start of
+        the maze mapping competition. The Optical sub-team will work
+        on the IR sensor circuit, which will detect nearby robots
+        emitting IR at 6.08 kHz and distinguish them from decoys
+        emitting at 18 kHz.
+      </p>
+      <h4 class="page-header text-left">Prelab</h4>
+      <ul class="list-bullet">
+        <li>Review documentation for the analog-to-digital converter on the <a class="_blank" href="http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-42735-8-bit-AVR-Microcontroller-ATmega328-328P_Datasheet.pdf">ATmega328</a> (Arduino microcontroller)</li>
+        <li>Review documentation for <a class="_blank" href="http://wiki.openmusiclabs.com/wiki/ArduinoFFT">Open Music Labs Arduino FFT Library</a></li>
+        <ul>
+          <li>Read about Fourier Transforms</li>
+          <li>Read about Fast Fourier Transforms (FFT)</li>
         </ul>
-
-        <ul class="list-inline">
-          <li>Item One</li>
-          <li>Item Two</li>
-          <li>Item Three</li>
-          <li>Item Four</li>
-        </ul>
-
-        <!-- CODE -->
-        <code>&lt;h1&gt;Heading Text&lt;/h1&gt;</code>
-        <br>
-        Change directory with<kbd>cd</kbd>
-        <br>
-        To edit settings, press <kbd><kbd>ctrl</kbd> + <kbd>,</kbd></kbd>
-
-        <hr>
-
-        <!-- TABLES -->
-    <div class="container">
-      <table class="table table-striped table-bordered table-hover table-condensed">
-        <tr>
-          <th>Firstname</th>
-          <th>Lastname</th>
-          <th>Age</th>
-        </tr>
-        <tr class="danger">
-          <td>Jill</td>
-          <td>Smith</td>
-          <td>50</td>
-        </tr>
-        <tr>
-          <td>Eve</td>
-          <td>Jackson</td>
-          <td>24</td>
-        </tr>
-        <tr class="success">
-          <td>John</td>
-          <td>Doe</td>
-          <td>34</td>
-        </tr>
-        <tr>
-          <td>Stephanie</td>
-          <td>Landon</td>
-          <td>47</td>
-        </tr>
-        <tr>
-          <td>Mike</td>
-          <td>Johnson</td>
-          <td>19</td>
-        </tr>
-      </table>
-    </div>
-
-    <hr>
-
-    <!-- LIST GROUP -->
-    <div class="container">
-      <ul class="list-group">
-        <li class="list-group-item">Item One</li>
-        <li class="list-group-item">Item Two</li>
-        <li class="list-group-item">Item Three</li>
-        <li class="list-group-item">Item Four</li>
+        <li>Find a website to generate the <a class="_blank" href="http://www.szynalski.com/tone-generator/">660 Hz tone</a> for testing</li>
+        <li>Design simple analog amplifying and filtering circuits</li>
       </ul>
-
-      <div class="list-group">
-          <a href="#" class="list-group-item active">Item One</a>
-          <a href="#" class="list-group-item">Item Two</a>
-          <a href="#" class="list-group-item list-group-item-success">Item Three</a>
-          <a href="#" class="list-group-item disabled">Item Four</a>
-        </div>
-    </div>
-
-    <div class="container">
-      <!-- PANELS -->
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Panel title</h3>
-        </div>
-        <div class="panel-body">
-          Panel content
-        </div>
-        <div class="panel-footer">Panel Footer</div>
-      </div>
-
+      <h4 class="page-header text-left">Sub-Teams</h4>
+      <p>To begin, we split into two groups of two. Each group progressed
+        through the lab individually, as described below.
+      </p>
+      <ul class="list-bullet">
+        <li>Acoustic Team = Kenneth and Tyler</li>
+        <li>Optical Team = Brian and Eric</li>
+      </ul>
+      <h4 class="page-header text-left">FFT Analysis</h4>
+      <p>Both the Acoustic and Optical parts of this lab used Fast Fourier
+        Transforms (FFT) to determine the frequency components of the sampled
+        input signal from the sensors. <b>FFT ALGORITHM EXPLANATION.</b>
+        <br><br>
+        The FFT algorithm was implemented using Open Music Labs Arduino FFT
+        Library. By default, the library takes in an analog signal from Arduino
+        pin A0, samples it at 256 equally spaced intervals, and returns an array
+        with 128 values, which represent the magnitude of the frequency content
+        over a small range of frequencies. Since the FFT of a real signal is
+        symmetric over zero, only half of the outputs are unique, and thus 128
+        bins are returned (not 256).
+        <br><br>
+        To test and visualize the data, we used the example code "fft_adc_serial,"
+        which prints the FFT magnitude data to the serial monitor. We then copied
+        the data into Excel, and wrote a simple MATLAB script to read in and plot
+        the data.
+      </p>
       <hr>
-
-      <!-- IMAGES -->
-    <div class="container">
-      <img class="thumbnail" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97150&w=350&h=150">
-      <img class="img-rounded" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97150&w=350&h=150"><br><br>
-      <img class="img-circle" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97150&w=350&h=150">
-    </div>
-
-    <hr>
-
-    <!-- GRIDS -->
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-sm-8 col-xs-8">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <h3 class="page-header text-center">Acoustic Team</h3>
+      <h4 class="page-header text-left">Materials Used</h4>
+      <ul>
+        <li>1 × Arduino Uno</li>
+        <li>1 × USB A/B cable</li>
+        <li>1 × Electret Condenser Microphone (<a class="_blank" href="https://www.cui.com/product/resource/cma-4544pf-w.pdf">CMA-4544PF-W</a>)</li>
+        <li>1 × <a class="_blank" href="http://www.ti.com/lit/ds/symlink/lm158-n.pdf">LM358</a> Op Amp</li>
+        <li>1 × 1 μF Polarized Capacitor</li>
+        <li>1 × 220 pF Capacitor</li>
+        <li>1 × 330 pF Capacitor</li>
+        <li>1 × 330 Ω resistor</li>
+        <li>1 × 3.3 kΩ resistor</li>
+        <li>1 × 3.9 kΩ resistor</li>
+        <li>2 × 10 kΩ resistors</li>
+        <li>1 × 390 kΩ resistor</li>
+        <li>2 × 680 kΩ resistor</li>
+        <li>1 Solderless breadboard</li>
+      </ul>
+      <hr>
+      <h3 class="page-header text-center">Optical Team</h3>
+      <p><u>GOAL: use an Arduino and the FFT library to detect another robot
+        emitting IR at 6.08kHz and ignore decoys (18kHz)</u></p>
+      <h4 class="page-header text-left">Materials Used</h4>
+      <ul>
+        <li>1 × Arduino Uno</li>
+        <li>1 × USB A/B cable</li>
+        <li>1 × IR Phototransistor (<a class="_blank" href="http://www.mouser.com/ds/2/414/OP793-798-30653.pdf">OP598</a>)</li>
+        <li>1 × IR hat (given by TAs)</li>
+        <li>1 × IR decoy</li>
+        <li>1 × <a class="_blank" href="http://www.ti.com/lit/ds/symlink/lf353-n.pdf">LF353</a> Op Amp</li>
+        <li>1 × 2.3 μF Capacitor</li>
+        <li>1 × 10 nF Capacitor</li>
+        <li>1 × 10 Ω resistor</li>
+        <li>1 × 3.2 kΩ resistor</li>
+        <li>1 Solderless breadboard</li>
+      </ul>
+      <h4 class="page-header text-left">IR Circuit Design</h4>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <ul>
+              <li>We chose to implement an active band-pass filter with amplification in order to filter out DC and low frequency signals while also filtering out the higher frequency decoy signals</li>
+              <li>Received IR signals in the pass band (from other robots’ IR hats) are amplified for better ADC quantization range, as well as to detect them from further distances</li>
+              <li>Cut-off frequencies were intended to be 5 kHz and 7 kHz</li>
+              <li>Our capacitor and resistor values were:</li>
+              <ul>
+                <li>R1 = 10 Ω</li>
+                <li>C1 = 2.3 μF</li>
+                <li>R2 = 3.2 kΩ</li>
+                <li>C2 = 10 nF</li>
+              </ul>
+              <li>This resulted in cut-off frequencies of 4.97 kHz and 6.92 kHz</li>
+              <li>The gain of the filter in the pass band was intended to be R2/R1 = 320</li>
+              <li>Actual results:</li>
+              <ul>
+              	<li>Peak Gain: 75 or 19dB</li>
+              	<li>Bode Plot</li>
+              	<ul>
+              		<li>Shows bandpass filter with 3dB bandwidth 700Hz to 10kHz</li>
+              		<li>18kHz signal is half the power of the 6kHz signal after active filter</li>
+              		<li>Harmonics of the 18kHz signal that would alias into the 6kHz bins come out of the filter with 1/10 the magnitude of a 6kHz signal</li>
+              	</ul>
+              </ul>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab2/BPF.png" style="width:100%">
+              <div class="caption text-center">
+                <p>Band-pass filter schematic (from Professor Shealy, ECE2200 course notes)</p>
+              </div>
+            </div>
+            <div class="thumbnail">
+              <img src="img/lab2/ir_filter_bode.png" style="width:100%">
+              <div class="caption text-center">
+                <p>IR filter bode plot</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-4 col-sm-4 col-xs-4">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>
+      <h4 class="page-header text-left">FFT Analysis</h4>
+      <ul>
+        <li>As mentioned earlier, we use the Open Labs Arduino FFT Library for calculating the FFT</li>
+        <li>The default example code sets the ADC in free running mode and polls for each ADC conversion</li>
+        <ul>
+        	<li>ADC prescaler = 32</li>
+        	<ul>
+        		<li>NOTE - this ADC setup is different from the one used by the Acoustic Team</li>
+        	</ul>
+        	<li>Arduino clock frequency = 16 MHz</li>
+        	<li>Thus, sampling frequency = 38.4 kHz</li>
+          </ul>
+        <li>This is quick enough for the purpose of detecting IR signals, since we are sampling above the Nyquist rate, and the highest frequency IR signal we will see is 18 kHz</li>
+        <ul>
+        	<li>However, we may still see harmonics of these signals that are aliased to lower frequencies, since a sinusoidal input to a diode will cause harmonics</li>
+        	<li>Given our sampling rate and decoy frequency, we expect these aliased signals to appear at frequencies that are filtered out by our band pass filter</li>
+        </ul>
+        <li>The FFT code outputs 128 bins</li>
+        <ul>
+        	<li>Frequencies of interest are in bins 41 and 42</li>
+        	<li>This corresponds to 6.01 kHz and 6.16 kHz</li>
+        </ul>
+      </ul>
+      <h4 class="page-header text-left">Results</h4>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <p><u>Silence</u></p>
+            <div class="thumbnail">
+              <img src="img/lab2/silence.png" style="width:100%">
+              <div class="caption">
+                <ul>
+                  <li>Spectrum is pretty sparse</li>
+                  <li>There are some small peaks around 8 kHz and 13 kHz</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <p><u>IR Hat</u></p>
+            <div class="thumbnail">
+              <img src="img/lab2/IR_detected.png" style="width:100%">
+              <div class="caption">
+                <ul>
+                  <li>There is a large peak at 6160 Hz</li>
+                  <li>Bins 41 and 42 correspond to the 6 kHz IR hat signal</li>
+                  <li>When the peaks in these bins are above a threshold, then the IR hat signal is detected</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <p><u>IR Decoy</u></p>
+            <div class="thumbnail">
+              <img src="img/lab2/decoy_only.png" style="width:100%">
+              <div class="caption">
+                <ul>
+                  <li>There is a peak corresponding to 18 kHz on the spectrum</li>
+                  <li>No frequencies are aliased to the bins around 6 kHz</li>
+                  <li>Thus, we can ignore the 18 kHz peak and only observe bins 41 and 42 for IR hat detection</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <p><u>IR Hat + IR Decoy</u></p>
+            <div class="thumbnail">
+              <img src="img/lab2/IR_and_decoy.png" style="width:100%">
+              <div class="caption">
+                <ul>
+                  <li>There are peaks at 6 kHz and 18 kHz</li>
+                  <li>Ignore the 18 kHz bins</li>
+                  <li>Observe bins 41 and 42 for IR hat detection</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <br>
-      <div class="row">
-        <div class="col-md-3">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>
-        </div>
-        <div class="col-md-3">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>
-        </div>
-        <div class="col-md-3">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>
-        </div>
-        <div class="col-md-3">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-6">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
-        <div class="col-md-6">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-        <div class="col-md-1">
-          <h3>Box</h3>
-        </div>
-      </div>
-    </div>
 
     <!-- Footer -->
     <footer>
