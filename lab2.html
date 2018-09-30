@@ -297,11 +297,11 @@ Updated: 09/29/2018 -->
           	<li>Bin Size = 9,615.38/256 = 37.56 Hz/bin</li>
           	<li>Bin for 660 Hz = 660/37.56 = 17.57 --> Bin 18</li>
           </ul>
-          <li>CIRCUIT DESIGN EXPLANATION</li>
+          <li>For our circuit, we added an active low pass filter with a gain of -10.</li>
           <ul>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li></li>First we added two large (680k Ohm) resistors to bias the op amp's inverting input to mid-rail (2.5V)
+            <li></li>We also biased the op amp's non-inverting input to mid-rail using two 10k Ohm resistors, so that we only amplified the differential changes due to the microphone.
+            <li></li>Lastly, we added a parallel RC tank which acts as a low pass filter with a cutoff frequency of around 742 Hz. Because there was no 550pF capacitor in lab, we added a parallel combination of a 220pF and a 330pF capacitor to give us the desired cutoff frequency.
           </ul>
           <div class="container">
             <div class="row">
