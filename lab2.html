@@ -247,13 +247,15 @@ Updated: 09/29/2018 -->
       	</ul>
       	<div class="container">
       		<div class="row">
+            <div class="col-md-5">
+            </div>
       			<div class="col-md-3">
       				<div class="thumbnail">
                 <img src="img/lab2/mic_no_amp.png" style="width:100%">
               </div>
       			</div>
-      			<div class="col-md-9">
-      			</div>
+            <div class="col-md-4">
+            </div>
       		</div>
       	</div>
         </ul>
@@ -296,6 +298,10 @@ Updated: 09/29/2018 -->
           	<li>Number of Samples = 256</li>
           	<li>Bin Size = 9,615.38/256 = 37.56 Hz/bin</li>
           	<li>Bin for 660 Hz = 660/37.56 = 17.57 --> Bin 18</li>
+            <ul>
+              <li>Experimentally, we found that 660 Hz is right on the border between Bins 18 and 19</li>
+              <li>Thus, in our code we check for a large magnitude in BOTH of these bins</li>
+            </ul>
           </ul>
           <li>For our circuit, we added an active low pass filter with a gain of -10.</li>
           <ul>
@@ -379,11 +385,22 @@ Updated: 09/29/2018 -->
             </code></pre>
       </ul>
       <p><u>Demo:</u></p>
-
-      <div class="embed-responsive embed-responsive-21by9">
-        <iframe width="560" height="315" src="https://youtu.be/STY9FpOd5Rs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="embed-responsive embed-responsive-1by1">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/NuNEzC9RJa0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+          <div class="col-md-2">
+          </div>
+          <div class="col-md-5">
+            <div class="embed-responsive embed-responsive-1by1">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/STY9FpOd5Rs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
       </div>
-
       <br>
       <hr>
       <h3 class="page-header text-center">Optical Team</h3>
