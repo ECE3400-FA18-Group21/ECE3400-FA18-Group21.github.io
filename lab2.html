@@ -208,6 +208,7 @@ Updated: 09/29/2018 -->
         <li>2 × 680 kΩ resistor</li>
         <li>1 Solderless breadboard</li>
       </ul>
+
       <h4 class="page-header text-left">Testing the Microphone - Datasheet Circuit</h4>
       <ul>
       	<li>First, we built the recommended circuit from the datasheet to connect the microphone to the Arduino</li>
@@ -217,18 +218,30 @@ Updated: 09/29/2018 -->
       	</ul>
       	<div class="container">
       		<div class="row">
-            <div class="col-md-2">
+            <div class="col-md-1">
       			</div>
       			<div class="col-md-3">
       				<div class="thumbnail">
                 <img src="img/lab2/mic_datasheet.png" style="width:100%">
+                <div class="caption text-center">
+                  <p>Circuit from datasheet</p>
+                </div>
               </div>
       			</div>
-            <div class="col-md-2">
+            <div class="col-md-3">
+              <div class="thumbnail">
+                <img src="img/lab2/mic_datasheet_photo.jpg" style="width:100%">
+                <div class="caption text-center">
+                  <p>Circuit on breadboard</p>
+                </div>
+              </div>
             </div>
       			<div class="col-md-3">
       				<div class="thumbnail">
-                <img src="img/lab2/mic_datasheet_photo.jpg" style="width:100%">
+                <img src="img/lab2/mic_no_amp.png" style="width:100%">
+                <div class="caption text-center">
+                  <p>Results from oscilloscope</p>
+                </div>
               </div>
       			</div>
             <div class="col-md-2">
@@ -245,164 +258,203 @@ Updated: 09/29/2018 -->
       			<li>Clearly, we need to amplify the output</li>
       		</ul>
       	</ul>
-      	<div class="container">
-      		<div class="row">
-            <div class="col-md-5">
-            </div>
-      			<div class="col-md-3">
-      				<div class="thumbnail">
-                <img src="img/lab2/mic_no_amp.png" style="width:100%">
-              </div>
-      			</div>
-            <div class="col-md-4">
-            </div>
-      		</div>
-      	</div>
+      </ul>
+
+      <h4 class="page-header text-left">Testing the FFT Library</h4>
+      <ul>
+        <li>As mentioned earlier, we use the Open Labs Arduino FFT Library for calculating the FFT</li>
+        <li>To increase the accuracy of our readings, we altered the ADC prescaler value</li>
+        <ul>
+          <li><u>Original:</u> prescaler = 32 -> maps to clock of 1 MHz</li>
+          <li><u>Modified:</u> prescaler = 128 -> maps to clock of 125 kHz</li>
+        </ul>
+        <li>The original code had:
+        <ul>
+          <li>First set line: ADCSRA = 0xe5</li>
+          <li>Second set line: ADCSRA = 0xf5</li>
+        </ul>
+        <li>Our modified code is:</li>
+        <pre class="prettyprint"><code class="language-cpp">
+        void setup() {
+          Serial.begin(115200);                     // use the serial port
+          TIMSK0 = 0;                               // turn off timer0 for lower jitter - delay() and millis() killed
+          ADCSRA = 0xe7;                            // set the adc to free running mode, set prescaler=128 (default e5=32)
+          ADMUX = 0x40;                             // use adc0
+          DIDR0 = 0x01;                             // turn off the digital input for adc0
+        }
+        void loop() {
+          while(1) {                                // reduces jitter
+            cli();                                  // UDRE interrupt slows this way down on arduino1.0
+            for (int i = 0 ; i < 512 ; i += 2) {    // save 256 samples
+              while(!(ADCSRA & 0x10));              // wait for adc to be ready
+              ADCSRA = 0xf7;                        // restart adc --> set prescaler=f7=128 (default f5=32)
+        </code></pre>
+        <li>Next, we calculated which bin we would expect to find the 660 Hz signal in</li>
+        <ul>
+          <li>ADC clock = 125 kHz</li>
+          <li>ADC sampling = 13 clock cycles per read</li>
+          <li>ADC sampling = 125 kHz/13 = 9,615.38 Hz</li>
+          <li>Number of Samples = 256</li>
+          <li>Bin Size = 9,615.38/256 = 37.56 Hz/bin</li>
+          <li>Bin for 660 Hz = 660/37.56 = 17.57 --> Bin 18</li>
+          <ul>
+            <li>Experimentally, we found that 660 Hz is right on the border between Bins 18 and 19</li>
+            <li>Thus, in our integrated detection code we check for a large magnitude in BOTH of these bins</li>
+          </ul>
         </ul>
       </ul>
 
-      <h4 class="page-header text-left">Testing the Microphone - Amplifier Circuit</h4>
+      <h4 class="page-header text-left">Building a Microphone Amplifier Circuit</h4>
       <ul>
-        <li>As mentioned earlier, we use the Open Labs Arduino FFT Library for calculating the FFT</li>
-	        <li>To increase the accuracy of our readings, we altered the ADC prescaler value</li>
-        	<ul>
-        		<li><u>Original:</u> prescaler = 32 -> maps to clock of 1 MHz</li>
-        		<li><u>Modified:</u> prescaler = 128 -> maps to clock of 125 kHz</li>
-        	</ul>
-        	<li>The original code had:
-        	<ul>
-        		<li>First set line: ADCSRA = 0xe5</li>
-        		<li>Second set line: ADCSRA = 0xf5</li>
-        	</ul>
-        	<li>Our modified code is:</li>
-          <pre class="prettyprint"><code class="language-cpp">
-          void setup() {
-            Serial.begin(115200);                     // use the serial port
-            TIMSK0 = 0;                               // turn off timer0 for lower jitter - delay() and millis() killed
-            ADCSRA = 0xe7;                            // set the adc to free running mode, set prescaler=128 (default e5=32)
-            ADMUX = 0x40;                             // use adc0
-            DIDR0 = 0x01;                             // turn off the digital input for adc0
-          }
-          void loop() {
-            while(1) {                                // reduces jitter
-              cli();                                  // UDRE interrupt slows this way down on arduino1.0
-              for (int i = 0 ; i < 512 ; i += 2) {    // save 256 samples
-                while(!(ADCSRA & 0x10));              // wait for adc to be ready
-                ADCSRA = 0xf7;                        // restart adc --> set prescaler=f7=128 (default f5=32)
-          </code></pre>
-          <li>Next, we calculated which bin we would expect to find the 660 Hz signal in</li>
-          <ul>
-          	<li>ADC clock = 125 kHz</li>
-          	<li>ADC sampling = 13 clock cycles per read</li>
-          	<li>ADC sampling = 125 kHz/13 = 9,615.38 Hz</li>
-          	<li>Number of Samples = 256</li>
-          	<li>Bin Size = 9,615.38/256 = 37.56 Hz/bin</li>
-          	<li>Bin for 660 Hz = 660/37.56 = 17.57 --> Bin 18</li>
+        <li>For our circuit, we added an active low pass filter with a gain of -10 dB</li>
+        <ul>
+          <li>First, we added two large (680 kΩ) resistors to bias the op amp's inverting input to mid-rail (2.5V)</li>
+          <li>Next, we biased the op amp's non-inverting input to mid-rail using two 10 kΩ resistors, so that we only amplified the differential changes due to the microphone</li>
+          <li>Lastly, we added a parallel RC tank which acts as a low pass filter with a cutoff frequency of around 742 Hz</li>
+          <li>Because there was no 550 pF capacitor in lab, we added a parallel combination of a 220 pF and a 330 pF capacitor to give us the desired cutoff frequency</li>
+        </ul>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-4">
+              <div class="thumbnail">
+                <img src="img/lab2/lab2_mic_amp.PNG" style="width:100%">
+                <div class="caption text-center">
+                  <p>Circuit diagram</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="thumbnail">
+                <img src="img/lab2/Mic_amp_1.jpg" style="width:100%">
+                <div class="caption text-center">
+                  <p>Breadboard circuit</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="thumbnail">
+                <img src="img/lab2/Mic_amp_2.jpg" style="width:100%">
+                <div class="caption text-center">
+                  <p>Breadboard circuit</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1">
+            </div>
+          </div>
+        </div>
+      </ul>
+
+      <h4 class="page-header text-left">Testing the Microphone - Amplifier Circuit</h4>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
             <ul>
-              <li>Experimentally, we found that 660 Hz is right on the border between Bins 18 and 19</li>
-              <li>Thus, in our code we check for a large magnitude in BOTH of these bins</li>
+              <li>Circuit testing</li>
+              <ul>
+                <li>To make sure the microphone amplifier circuit was working properly, we ran it through the following tests:</li>
+                <ul>
+                  <li>660 Hz tone</li>
+                  <li>680 Hz tone</li>
+                  <li>640 Hz tone</li>
+                  <li>660+760 Hz tone</li>
+                  <li>660+560 Hz tone</li>
+                </ul>
+                <li>For each test, we played one or more distinct tones from device(s) 5 cm away from the microphone</li>
+                <li>With the audio playing, we ran the FFT code and recorded the data</li>
+                <li>Once we finished, we graphed the results</li>
+                <li>The data shows that we are successfully able to differentiate between various tones</li>
+              </ul>
             </ul>
-          </ul>
-          <li>For our circuit, we added an active low pass filter with a gain of -10.</li>
-          <ul>
-            <li></li>First we added two large (680k Ohm) resistors to bias the op amp's inverting input to mid-rail (2.5V)
-            <li></li>We also biased the op amp's non-inverting input to mid-rail using two 10k Ohm resistors, so that we only amplified the differential changes due to the microphone.
-            <li></li>Lastly, we added a parallel RC tank which acts as a low pass filter with a cutoff frequency of around 742 Hz. Because there was no 550pF capacitor in lab, we added a parallel combination of a 220pF and a 330pF capacitor to give us the desired cutoff frequency.
-          </ul>
-          <div class="container">
-            <div class="row">
-              <div class="col-md-1">
-              </div>
-              <div class="col-md-4">
-                <div class="thumbnail">
-                  <img src="img/lab2/Mic_amp_1.jpg" style="width:100%">
-                </div>
-              </div>
-              <div class="col-md-2">
-              </div>
-              <div class="col-md-4">
-                <div class="thumbnail">
-                  <img src="img/lab2/Mic_amp_2.jpg" style="width:100%">
-                </div>
-              </div>
-              <div class="col-md-1">
+          </div>
+          <div class="col-md-6">
+            <div class="thumbnail">
+              <img src="img/lab2/AudioFFT_Testing.jpg" style="width:100%">
+              <div class="caption text-center">
+                <p>Microphone amplifier circuit FFT test results</p>
               </div>
             </div>
           </div>
-          <li>CIRCUIT TESTING</li>
-          <li>Integration into software</li>
-          <ul>
-            <li>We created a function "detect_660hz"</li>
-            <ul>
-              <li>Runs FFT function with prescaler = 128</li>
-              <li>Checks bins 18 AND 19</li>
-              <li>If magnitudes are both greater than a defined threshold -> returns TRUE</li>
-            </ul>
-            <pre class="prettyprint"><code class="language-cpp">
-            /**
-             * [detect_660hz]
-             * OUTPUT = returns TRUE if a 660hz signal is detected by the Arduino,
-             *          & FALSE otherwise
-             * Uses THRESHOLD to determine whether the tone is playing or not
-             */
-            bool detect_660hz(){
-                byte * fft_log_out = get_fft_bins();
-                if (fft_log_out[17] > THRESHOLD && fft_log_out[18] > THRESHOLD) //bins 18 & 19, but 0 based so subtract 1
-                    return true;
-                else
-                    return false;
-            }
-            </code></pre>
-            <li>To test "detect_660hz", we wrote a simple sketch</li>
-            <ul>
-              <li>Every time through the loop, "detect_660hz" is run</li>
-              <li>To prevent a stray audio source from setting off our robot, a counter is used</li>
-              <li>If and only if "detect_660hz" returns true 6 times in a row --> then the robot will start</li>
-              <li>We showed this by turning the internal LED on</li>
-            </ul>
-            <pre class="prettyprint"><code class="language-cpp">
-              #include "mic.h"
-              #include "ir_hat.h"
-              int counter = 0;
+        </div>
+      </div>
+      <h4 class="page-header text-left">Integrating the Microphone Functionality into Software</h4>
+      <ul>
+        <li>We created a function "detect_660hz"</li>
+        <ul>
+          <li>Runs FFT function with prescaler = 128</li>
+          <li>Checks bins 18 AND 19</li>
+          <li>If magnitudes are both greater than a defined threshold -> returns TRUE</li>
+        </ul>
+        <pre class="prettyprint"><code class="language-cpp">
+        /**
+         * [detect_660hz]
+         * OUTPUT = returns TRUE if a 660hz signal is detected by the Arduino,
+         *          & FALSE otherwise
+         * Uses THRESHOLD to determine whether the tone is playing or not
+         */
+        bool detect_660hz(){
+            byte * fft_log_out = get_fft_bins();
+            if (fft_log_out[17] > THRESHOLD && fft_log_out[18] > THRESHOLD) //bins 18 & 19, but 0 based so subtract 1
+                return true;
+            else
+                return false;
+        }
+        </code></pre>
+        <li>To test "detect_660hz", we wrote a simple sketch</li>
+        <ul>
+          <li>Every time through the loop, "detect_660hz" is run</li>
+          <li>To prevent a stray audio source from setting off our robot, a counter is used</li>
+          <li>If and only if "detect_660hz" returns true 6 times in a row --> then the robot will start</li>
+          <li>We showed this by turning the internal LED on</li>
+        </ul>
+        <pre class="prettyprint"><code class="language-cpp">
+          #include "mic.h"
+          #include "ir_hat.h"
+          int counter = 0;
 
-              void setup() {
-                Serial.begin(9600);
-                pinMode(LED_BUILTIN, OUTPUT);
-                fft_setup();
-              }
-              void loop() {
-                int count = 0;
-                Serial.println(detect_660hz());
-                if(detect_660hz())
-                  counter++;
-                else
-                  counter = 0;
-                if(counter>6)
-                  digitalWrite(LED_BUILTIN, HIGH);
-                else
-                  digitalWrite(LED_BUILTIN, LOW);
-              }
-            </code></pre>
+          void setup() {
+            Serial.begin(9600);
+            pinMode(LED_BUILTIN, OUTPUT);
+            fft_setup();
+          }
+          void loop() {
+            int count = 0;
+            Serial.println(detect_660hz());
+            if(detect_660hz())
+              counter++;
+            else
+              counter = 0;
+            if(counter>6)
+              digitalWrite(LED_BUILTIN, HIGH);
+            else
+              digitalWrite(LED_BUILTIN, LOW);
+          }
+        </code></pre>
       </ul>
       <p><u>Demo:</u></p>
       <div class="container">
         <div class="row">
+          <div class="col-md-1">
+          </div>
           <div class="col-md-5">
             <div class="embed-responsive embed-responsive-1by1">
               <iframe width="560" height="315" src="https://www.youtube.com/embed/NuNEzC9RJa0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
-          </div>
-          <div class="col-md-2">
           </div>
           <div class="col-md-5">
             <div class="embed-responsive embed-responsive-1by1">
               <iframe width="560" height="315" src="https://www.youtube.com/embed/STY9FpOd5Rs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
           </div>
+          <div class="col-md-1">
+          </div>
         </div>
       </div>
       <br>
       <hr>
+
       <h3 class="page-header text-center">Optical Team</h3>
       <p><u>GOAL: use an Arduino and the FFT library to detect another robot
         emitting IR at 6.08 kHz and ignore decoys (18 kHz)</u></p>
@@ -421,41 +473,41 @@ Updated: 09/29/2018 -->
         <li>1 Solderless breadboard</li>
       </ul>
       <h4 class="page-header text-left">IR Circuit Design</h4>
+      <ul>
+        <li>We chose to implement an active band-pass filter with amplification in order to filter out DC and low frequency signals while also filtering out the higher frequency decoy signals</li>
+        <li>Received IR signals in the pass band (from other robots’ IR hats) are amplified for better ADC quantization range, as well as to detect them from further distances</li>
+        <li>Cut-off frequencies were intended to be 5 kHz and 7 kHz</li>
+        <li>Our capacitor and resistor values were:</li>
+        <ul>
+          <li>R1 = 10 Ω</li>
+          <li>C1 = 2.3 μF</li>
+          <li>R2 = 3.2 kΩ</li>
+          <li>C2 = 10 nF</li>
+        </ul>
+        <li>This resulted in cut-off frequencies of 4.97 kHz and 6.92 kHz</li>
+        <li>The gain of the filter in the pass band was intended to be R2/R1 = 320</li>
+        <li>Actual results:</li>
+        <ul>
+        	<li>Peak Gain: 75 or 19 dB</li>
+        	<li>Bode Plot</li>
+        	<ul>
+        		<li>Shows bandpass filter with 3 dB bandwidth 700 Hz to 10 kHz</li>
+        		<li>18kHz signal is half the power of the 6 kHz signal after active filter</li>
+        		<li>Harmonics of the 18 kHz signal that would alias into the 6 kHz bins come out of the filter with 1/10 the magnitude of a 6 kHz signal</li>
+        	</ul>
+        </ul>
+      </ul>
       <div class="container">
         <div class="row">
-          <div class="col-md-8">
-            <ul>
-              <li>We chose to implement an active band-pass filter with amplification in order to filter out DC and low frequency signals while also filtering out the higher frequency decoy signals</li>
-              <li>Received IR signals in the pass band (from other robots’ IR hats) are amplified for better ADC quantization range, as well as to detect them from further distances</li>
-              <li>Cut-off frequencies were intended to be 5 kHz and 7 kHz</li>
-              <li>Our capacitor and resistor values were:</li>
-              <ul>
-                <li>R1 = 10 Ω</li>
-                <li>C1 = 2.3 μF</li>
-                <li>R2 = 3.2 kΩ</li>
-                <li>C2 = 10 nF</li>
-              </ul>
-              <li>This resulted in cut-off frequencies of 4.97 kHz and 6.92 kHz</li>
-              <li>The gain of the filter in the pass band was intended to be R2/R1 = 320</li>
-              <li>Actual results:</li>
-              <ul>
-              	<li>Peak Gain: 75 or 19dB</li>
-              	<li>Bode Plot</li>
-              	<ul>
-              		<li>Shows bandpass filter with 3dB bandwidth 700Hz to 10kHz</li>
-              		<li>18kHz signal is half the power of the 6kHz signal after active filter</li>
-              		<li>Harmonics of the 18kHz signal that would alias into the 6kHz bins come out of the filter with 1/10 the magnitude of a 6kHz signal</li>
-              	</ul>
-              </ul>
-            </ul>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="thumbnail">
               <img src="img/lab2/BPF.png" style="width:100%">
               <div class="caption text-center">
                 <p>Band-pass filter schematic (from Professor Shealy, ECE2100 course notes)</p>
               </div>
             </div>
+          </div>
+          <div class="col-md-6">
             <div class="thumbnail">
               <img src="img/lab2/ir_filter_bode.png" style="width:100%">
               <div class="caption text-center">
@@ -464,9 +516,9 @@ Updated: 09/29/2018 -->
             </div>
           </div>
         </div>
+      </div>
       <h4 class="page-header text-left">FFT Analysis</h4>
       <ul>
-        <li>As mentioned earlier, we use the Open Labs Arduino FFT Library for calculating the FFT</li>
         <li>The default example code sets the ADC in free running mode and polls for each ADC conversion</li>
         <ul>
         	<li>ADC prescaler = 32</li>
