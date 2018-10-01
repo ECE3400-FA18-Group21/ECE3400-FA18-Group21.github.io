@@ -150,8 +150,78 @@ Updated: 09/29/2018 -->
       <h4 class="page-header text-left">FFT Analysis</h4>
       <p>Both the Acoustic and Optical parts of this lab used Fast Fourier
         Transforms (FFT) to determine the frequency components of the sampled
-        input signal from the sensors. <b>FFT ALGORITHM EXPLANATION.</b>
-        <br>
+        input signal from the sensors.
+        <p>
+        In this lab, we are tasked with identifying if a certain frequency is
+        present or not in a sensors input. For pure sinusoids, this is not so
+        difficult, as one can simply read off the period in the time domain.
+        However, for more complicated signals, it is not necessarily clear what
+        frequencies are present, and certainly not clear if a given frequency
+        is present. To make this process easier, a signal can be inspected in
+        the frequency domain.
+        <p>
+        In the frequency domain, we can observe a signals “spectrum”.
+        A spectrum is an interpretation of a signal which assigns a magnitude
+        (an importance) to a given frequency. The standard way to compute this
+        is with a Discrete Fourier Transform (DFT):
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+              <div class="thumbnail">
+                <img src="img/lab2/DFT_equation.png" style="width:100%">
+                <div class="caption text-center">
+                  <p>The DFT equation</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+            </div>
+          </div>
+        </div>
+        <p>
+        The DFT computes a change of basis, assigning the weight X(k) to a
+        given radial frequency (2*pi*k) by computing the inner product of the
+        original signal with the complex exponential at that frequency.
+        <p>
+        Note that to compute one X(k) value, we need N multiplications, and
+        N - 1 additions. To get useful information about your signal, you
+        generally need N values of k. This makes the DFT computation an O(n^2)
+        operation, which can get very slow for large values of N.
+        <p>
+        To speed this process up, the Fast Fourier Transform (FFT) is used.
+        The FFT is an algorithm for computing the DFT efficiently—the best
+        speed up is achieved when N is a power of 2. The algorithm uses a
+        “divide-and-conquer” method to compute the DFT. It first isolates the
+        even and odd terms of the original DFT sum. Then it evaluates these
+        sums as two independent FFTs of length N/2.
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+              <div class="thumbnail">
+                <img src="img/lab2/fft_equation.png" style="width:100%">
+                <div class="caption text-center">
+                  <p>The FFT divide-and-conquer approach</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+            </div>
+          </div>
+        </div>
+        <p>
+        A key to this process is that the odd sum get transformed into a N/2
+        FFT by pulling out an overall constant phase. This process of splitting
+        up into two FFTs can continue down all the way until you have reached a
+        series of FFTs, each acting on only two values. This splitting action
+        occurs log2(N) - 1 times. At each stage, there are N multiplications and
+         additions, so our computational complexity has decreased to
+         O(N * log2(N)).
+
+        <p>
         The FFT algorithm was implemented using Open Music Labs Arduino FFT
         Library. By default, the library takes in an analog signal from Arduino
         pin A0, samples it at 256 equally spaced intervals, and returns an array
