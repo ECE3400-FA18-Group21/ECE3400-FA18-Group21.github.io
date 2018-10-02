@@ -150,10 +150,7 @@ Updated: 09/29/2018 -->
       <h4 class="page-header text-left">FFT Analysis</h4>
       <p>Both the Acoustic and Optical parts of this lab used Fast Fourier
         Transforms (FFT) to determine the frequency components of the sampled
-        input signal from the sensors.
-        <p>
-        In this lab, we are tasked with identifying if a certain frequency is
-        present or not in a sensors input. For pure sinusoids, this is not so
+        input signal from the sensors. For pure sinusoids, this is not so
         difficult, as one can simply read off the period in the time domain.
         However, for more complicated signals, it is not necessarily clear what
         frequencies are present, and certainly not clear if a given frequency
@@ -182,11 +179,11 @@ Updated: 09/29/2018 -->
         </div>
         <p>
         The DFT computes a change of basis, assigning the weight X(k) to a
-        given radial frequency (2*pi*k) by computing the inner product of the
+        given radial frequency (2*pi*k/N) by computing the inner product of the
         original signal with the complex exponential at that frequency.
         <p>
         Note that to compute one X(k) value, we need N multiplications, and
-        N - 1 additions. To get useful information about your signal, you
+        N - 1 additions. To get useful information about a signal of size N, you
         generally need N values of k. This makes the DFT computation an O(n^2)
         operation, which can get very slow for large values of N.
         <p>
@@ -198,7 +195,7 @@ Updated: 09/29/2018 -->
         sums as two independent FFTs of length N/2.
         <div class="container">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-1">
             </div>
             <div class="col-md-6">
               <div class="thumbnail">
@@ -208,12 +205,19 @@ Updated: 09/29/2018 -->
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
+              <div class="thumbnail">
+                <img src="img/lab2/butterfly.png" style="width:85%">
+                <div class="caption text-center">
+                  <p>FFT Butterfly diagram</p>
+                </div>
+            </div>
+              <div class="col-md-1">
             </div>
           </div>
         </div>
         <p>
-        A key to this process is that the odd sum get transformed into a N/2
+        A key to this process is that the odd sum gets transformed into a N/2
         FFT by pulling out an overall constant phase. This process of splitting
         up into two FFTs can continue down all the way until you have reached a
         series of FFTs, each acting on only two values. This splitting action
@@ -226,7 +230,7 @@ Updated: 09/29/2018 -->
         Library. By default, the library takes in an analog signal from Arduino
         pin A0, samples it at 256 equally spaced intervals, and returns an array
         with 128 values, which represent the magnitude of the frequency content
-        over a small range of frequencies. Since the FFT of a real signal is
+        for frequenices up to half of the samping frequency. Since the FFT of a real signal is
         symmetric over zero, only half of the outputs are unique, and thus 128
         bins are returned (not 256).
         <br>
