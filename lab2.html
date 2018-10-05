@@ -216,6 +216,7 @@ Updated: 09/29/2018 -->
             </div>
           </div>
         </div>
+      </div>
         <p>
         A key to this process is that the odd sum gets transformed into a N/2
         FFT by pulling out an overall constant phase. This process of splitting
@@ -671,6 +672,19 @@ Updated: 09/29/2018 -->
           </div>
         </div>
       </div>
+      <hr>
+      <h3 class="page-header text-center">Concurrent Testing</h3>
+      <p>Our concurrent testing software works as follows</p>
+      <ul>
+        <li>Idle until 660 Hz tone is detected</li>
+        <li>When microphone circuit detects 660 Hz, turn on YELLOW LED and advance in code</li>
+        <li>Continuously run IR detection code</li>
+        <li>If 6.08 kHz IR is detected, turn on GREEN LED</li>
+      </ul>
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/7NOfNRjhc0I" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer>
