@@ -134,31 +134,143 @@ Updated: 10/17/2018 -->
       <hr>
       <h4 class="page-header text-left">Wall Detection</h4>
       <ul class="list-bullet">
-        <li></li>
+        <li>We installed three IR range finders on our robot</li>
+        <ul>
+          <li>Pointing straight ahead (in direction of movement)</li>
+          <li>To the left</li>
+          <li>To the right</li>
+        </ul>
+        <li>This arrangement allows us to detect both the presence and absence of walls around our robot</li>
+        <li>We created two functions (with fairly self explanatory names) that read data from the range finders to detect walls:</li>
+        <ul>
+          <li>detect_wall_3in(int pin)</li>
+          <li>detect_wall_6in(int pin)</li>
+          <li>NOTE - we experimented with this setup to calibrate the threshold values</li>
+        </ul>
+        <li>Our IR range finder code is as follows:</li>
       </ul>
+      <pre class="prettyprint"><code class="language-cpp">
+      #define VAL_6_INCH 100
+      #define VAL_3_INCH 200
+
+      #include "ir_rangefinder.h"
+      #include <Arduino.h>
+
+      int read_range_sensor(int pin){
+        return analogRead(pin);
+      }
+      bool detect_wall_6in(int pin){
+        int val = read_range_sensor(pin);
+        if(val > VAL_6_INCH)
+          return true;
+        else
+          return false;
+      }
+      bool detect_wall_3in(int pin){
+        int val = read_range_sensor(pin);
+        if(val > VAL_3_INCH)
+          return true;
+        else
+          return false;
+      }
+      </code></pre>
       <hr>
       <h4 class="page-header text-left">System Integration - <i>Attempt #1</i></h4>
       <ul class="list-bullet">
-        <li></li>
+        <li>Create a loop that runs all processes one-after-another</li>
+        <ul>
+          <li>Begin by running the 660 Hz detection using the microphone circuit and mic FFT</li>
+          <ul>
+            <li>Run this continuously until 660 Hz is detected 5 consecutive times</li>
+            <li>When this occurs, advance to the rest of the code and begin movement</li>
+            <li>This code will not be run again</li>
+          </ul>
+          <li>Perform line tracking</li>
+          <li>Perform wall detection</li>
+          <li>Perform IR robot detection</li>
+        </ul>
+        <li>Analysis:</li>
+        <ul>
+          <li>Results are erratic; solution only partially works</li>
+          <ul>
+            <li>Sometimes line tracking suddenly fails</li>
+            <li>Sometimes wall detection is too slow to respond</li>
+            <li>Sometimes IR hat dection is too slow to respond</li>
+            <li><u>Hypothesis</u> = the IR_hat FFT function call is affecting these processes</li>
+          </ul>
+          <li>The FFT library manually sets the ADC control registers</li>
+          <ul>
+            <li>This breaks the analogRead() function from the Arduino library</li>
+            <li>Most of our functions utilize analogRead()</li>
+          </ul>
+        </ul>
       </ul>
       <hr>
-      <h4 class="page-header text-left">Fixing Problems</h4>
+      <h4 class="page-header text-left">Fixing the FFT</h4>
       <ul class="list-bullet">
-        <li></li>
+        <li>The Open Music Labs Arduino FFT changes values in the following ADC control registers</li>
+        <ul>
+          <li>ADCSRA</li>
+          <li>ADMUX</li>
+          <li>TIMSK0</li>
+          <li>DIDR0</li>
+        </ul>
+        <li>This causes the PWM library’s timer to not function correctly since it uses the same timer registers</li>
+        <ul>
+          <li>As a result, the servos do not behave in the intended manner</li>
+        </ul>
+        <li>Our solution stores the ADC register values before calling the FFT function</li>
+        <ul>
+          <li>We restore the ADC registers after the FFT function completes</li>
+        </ul>
       </ul>
       <hr>
       <h4 class="page-header text-left">System Integration - <i>Attempt #2</i></h4>
-      <ul class="list-bullet">
-        <li></li>
-      </ul>
-      <hr>
-      <h3 class="page-header text-center">Video Demonstration</h3>
       <p><u>GOAL: a robot that recognizes 660 Hz, does line tracking, and avoids robots and walls</u></p>
       <ul>
-        <li>NOTE - The IR detection circuit <i>does</i> work to recognize the IR Hat and stop the robot</li>
+        <li>After implementing the afromentioned FFT code fix, we further refined our main loop</li>
+        <ul>
+          <li>Wait to begin operations until detect_660hz() returns TRUE 5 consecutive times</li>
+          <ul>
+            <li>The green LED indicates that 660 Hz was detected</li>
+            <li>This is run in a separate loop from the below code</li>
+            <li>It is never run again</li>
+          </ul>
+          <li>Check the line sensors and range finders - our conditional logic is:</li>
+        </ul>
+      </ul>
+      <pre class="prettyprint"><code class="language-cpp">
+      // wall detected at an intersection
+      if((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ){
+            turnLeftIntersection(servo_L, servo_R);
+      }
+      // wall detected but not at an intersection
+      else if(detect_wall_3in(3)){
+        turnLeft(servo_L, servo_R);
+      }
+      // no wall detected --> just track the line
+      else if (sensorStatus[0] == 0) //turn Right
+        adjustRight(servo_L, servo_R, 85);
+      else if (sensorStatus[2] == 0) //turn Left
+        adjustLeft(servo_L, servo_R, 85);
+      else{
+        moveForward(servo_L, servo_R);
+      }
+      </code></pre>
+      <ul>
+        <ul>
+          <li>Run detect_6080hz() to check for other robots</li>
+          <ul>
+            <li>This process is run in a <i>while</i> loop</li>
+            <li>Our robot will stop moving and continuously check for the presence of another robot</li>
+            <li>The red LED indicates that 6080 Hz is detected</li>
+            <li>When no robot is detected anymore, our robot will resume normal operations</li>
+          </ul>
+        </ul>
+        <li>NOTE - The IR detection circuit <i>does</i> correctly recognize the IR hat (another robot) and stop our robot</li>
         <ul>
           <li>The physical location of the phototransistor, however, is obstructed by other components</li>
-          <li>This explains the difficulty Kenneth has getting the IR to be recognize</li>
+          <li>This explains the difficulty Kenneth has getting the IR to be recognized</li>
           <li>We plan on moving the phototransistor to a more optimal, unobstructed location in the front of our robot</li>
         </ul>
       </ul>
