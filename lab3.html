@@ -2,7 +2,7 @@
 <!-- ECE 3400 | Fall 2018
 website for Team 21
 Created: 08/29/2018
-Updated: 10/17/2018 -->
+Updated: 10/21/2018 -->
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
 
 <html lang="en">
@@ -117,6 +117,109 @@ Updated: 10/17/2018 -->
       <br><br>
       <h1 class="page-header text-center">Lab 3</h1>
       <hr>
+
+      <h4 class="page-header text-left">Lab Goals</h4>
+      <p>
+        Integrate all components previously worked on in labs 1-2 and
+        milestones 1-2. This consists of creating a robot that:
+        <ul>
+          <li>Starts on a 660 Hz tone</li>
+          <li>Navigates a small test maze autonomously</li>
+          <li>Sends maze information it discovers wirelessly to a base station</li>
+          <li>Displays the updates on the base station (used for debugging)</li>
+        </ul>
+        One group will work on the radio component and the other on integrating
+        the various functionality. At the end of the lab, this work will be
+        unified so that the robot can run through the maze and update the GUI
+        as it explores.
+      </p>
+      <h4 class="page-header text-left">Prelab</h4>
+      <ul class="list-bullet">
+      	<li>Discuss method to encode maze information</li>
+      	<ul>
+      		<li>Kenneth designed <i>Maze</i> class and software hierarchy
+      	</ul>
+      	<li>Final maze has the following specifications:</li>
+      	<ul>
+      		<li>9 × 9 squares</li>
+      		<li>Each square can be explored or unexplored</li>
+      		<li>Each square can have walls on either and all sides</li>
+      		<li>Each square can have treasures (with three shapes and two colors</li>
+      		<li>Each square can potentially have other robots or decoys</li>
+      	</ul>
+      	<li>Review and install the <a target="_blank" href="http://maniacbug.github.io/RF24/classRF24.html">RF24 Arduino Library</a></li>
+      	<li>Review and instal the TA designed <a target="_blank" href="https://github.com/backhous/ece3400-maze-gui">graphical user interface (GUI)</a></li>
+      </ul>
+      <h4 class="page-header text-left">Sub-Teams</h4>
+      <p>To begin, we split into two groups of two. Each group progressed
+        through the lab individually, as described below.
+      </p>
+      <ul class="list-bullet">
+        <li>Robot Integration Team = Brian and Kenneth</li>
+        <li>Radio Team = Eric and Tyler</li>
+        <li>NOTE - due to the complexity and interconnectedness of the functions
+          in this lab, we frequently came together as one large group to track
+          progress and talk through issues</li>
+      </ul>
+      <hr>
+
+      <h3 class="page-header text-center">Radio Team</h3>
+      <p><u>GOAL: send maze information wirelessly between Arduino’s</u></p>
+      <h4 class="page-header text-left">Materials Used</h4>
+      <ul>
+        <li>2 × Arduino Uno</li>
+        <li>2 × <a target="_blank" href="https://www.sparkfun.com/datasheets/Components/SMD/nRF24L01Pluss_Preliminary_Product_Specification_v1_0.pdf">Nordic nRF24L01+ transceivers</a></li>
+        <li>16 × Female-to-Male Wire Jumper (instead of the radio breakout board with header)</li>
+        <ul>
+          <li>NOTE - we crimped these wire connectors ourselves</li>
+        </ul>
+      </ul>
+
+      <h4 class="page-header text-left">INFO</h4>
+      <ul>
+        <li></li>
+      </ul>
+
+
+
+      <hr>
+
+      <h3 class="page-header text-center">Robot Integration Group</h3>
+      <p><u>GOAL: Robot-to-GUI integration, full exploration and update on the GUI</u></p>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h4 class="page-header text-left">Materials Used</h4>
+            <ul>
+              <li>Our robot</li>
+              <li>All code from past labs</li>
+              <li>IR Decoy</li>
+              <li>660 Hz tone generator</li>
+              <li>Partner with another team to show robot avoidance</li>
+              <li>Walls to make the maze set up (follow this layout</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab3/Maze_Layout.png" style="width:100%">
+              <div class="caption text-center">
+                <p>Maze layout for testing</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="page-header text-left">INFO</h4>
+      <ul>
+        <li></li>
+      </ul>
+
+
+
+
+
+
     </div>
 
     <!-- Footer -->
