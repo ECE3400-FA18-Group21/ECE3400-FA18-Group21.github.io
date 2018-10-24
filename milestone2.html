@@ -244,19 +244,14 @@ Updated: 10/17/2018 -->
       if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ) {
             if (detect_wall_6in(1)){
               turnLeftIntersection(servo_L, servo_R);
-              send_advance_intersection(radio, true, false, true);
-              send_turn_left(radio);
             }
             else{
               turnRightIntersection(servo_L, servo_R);
-              send_advance_intersection(radio, true, false, false);
-              send_turn_right(radio);
             }
         }
         // wall detected but not at an intersection
         else if (detect_wall_3in(3)) {
           turnLeft(servo_L, servo_R);
-          send_turn_left(radio);
         }
         // no wall detected --> just track the line
         else if (sensorStatus[0] == 0) //turn Right

@@ -169,21 +169,145 @@ Updated: 10/21/2018 -->
       <ul>
         <li>2 × Arduino Uno</li>
         <li>2 × <a target="_blank" href="https://www.sparkfun.com/datasheets/Components/SMD/nRF24L01Pluss_Preliminary_Product_Specification_v1_0.pdf">Nordic nRF24L01+ transceivers</a></li>
-        <li>16 × Female-to-Male Wire Jumper (instead of the radio breakout board with header)</li>
+        <li>16 × Female-to-Male jumper wire (instead of the radio breakout board with header)</li>
         <ul>
           <li>NOTE - we crimped these wire connectors ourselves</li>
         </ul>
       </ul>
-
-      <h4 class="page-header text-left">INFO</h4>
+      <h4 class="page-header text-left">Getting Started</h4>
       <ul>
+        <li>Plug the 2 radios into our 2 Arduinos using the female-to-male jumper wires we constructed</li>
+        <ul>
+          <li>IMPORTANT - the radios use <b>3.3V, NOT 5V</b></li>
+          <li>Initially, we powered the radios using the Bench Power Supply</li>
+          <ul>
+            <li>This allowed us to observe the current draw</li>
+            <li>We used this to test to make sure our hardware was not broken</li>
+          </ul>
+          <li>Once we got our system working, we transitioned to using the 3.3V pin on the Arduino</li>
+        </ul>
+        <li>Instead of using the recommended RF24 Arduino Library, we used a newer, optimized version</li>
+        <ul>
+          <li>Recommended --> <a target="_blank" href="https://github.com/maniacbug/RF24">RF24 Arduino Library</a> (last updated 5 years ago)</li>
+          <li>What we used --> <a target="_blank" href="https://github.com/nRF24/RF24">Optimized fork of nRF24L01 for Arduino</a> (currently being updated)</li>
+          <ul>
+            <li>Documentation and Class Reference page: <a target="_blank" href="http://tmrh20.github.io/RF24/Official">LINK</a></li>
+          </ul>
+        </ul>
+        <li>To begin, we used the "GettingStarted" example sketche</li>
+        <li>We changed the address identifier numbers for our system as specified in the lab instructions</li>
+        <ul>
+          <li>Formula: 2(3D+N)+X</li>
+          <li>D (day of lab) = 4 (Thursday)</li>
+          <li>N (team number) = 21</li>
+          <li>X (radio designator) = 0 for one radio, 1 for the other radio (need two identifiers)</li>
+          <li><u>Channel Numbers</u> = 110 and 111 in decimal = <b>0x6E</b> and <b>0x6F</b> in hex</li>
+          <pre class="prettyprint"><code class="language-cpp">
+            const uint64_t addresses[][2] = {0x000000006ELL, 0x000000006FLL};
+          </code></pre>
+        </ul>
+      </ul>
+
+      <h4 class="page-header text-left">Testing the Radios</h4>
+      <ul>
+        <li>We programmed the "GettingStarted" sketch onto both Arduinos</li>
+        <ul>
+          <li>Allowed us to open a serial monitor for each radio simultaneously</li>
+        </ul>
+        <li>Initial Issues:</li>
+        <ul>
+          <li>Broken hardware</li>
+          <li>Broken female-to-male jumper wire (no connectivity)</li>
+        </ul>
+        <li>After addressing these issues, we were able to experiment with the radios</li>
+        <li>We cycled through the power level settings to test the range</li>
+        <ul>
+          <li>Minimum of 15 feet range is needed for the final competition</li>
+          <ul>
+            <li>RF24_PA_MIN = 7 feet</li>
+            <li>RF24_PA_LOW = 10 feet</li>
+            <li>RF24_PA_HIGH = 17 feet</li>
+            <li>RF24_PA_MAX = 25 feet --> we decided to use this for extra reliability</li>
+          </ul>
+          <li>NOTE - straight-line distance was measured in the hallway with no obstructions</li>
+          <li>NOTE - these were found to be the values at which no packet-loss was detected for 25 consecutives transmissions</li>
+        </ul>
+      </ul>
+
+
+      <h4 class="page-header text-left">Sending Maze Information Between Arduinos</h4>
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
         <li></li>
       </ul>
 
+      <h4 class="page-header text-left">Creating the Base Station</h4>
+      <ul>
+        <li>Our base station Arduino is programmed with a different main sketch than our robot</li>
+        <ul>
+          <li>Although they share sub-function libraries (.cpp and .h files)</li>
+          <ul>
+            <li>Maze.h and Maze.cpp</li>
+            <li>nordic_rf.h and nordic_rf.cpp</li>
+            <ul>
+              <li>Robot is hard-coded to perform <i>Transmitter</i> setup and only call <i>Transmitter</i> functions</li>
+              <li>Base station is hard-coded to perform <i>Receiver</i> setup and only call <i>Receiver</i> functions</li>
+            </ul>
+          </ul>
+        </ul>
+        <li>The base station has a main loop that runs the following processes:</li>
+        <ul>
+          <li>Receive transmission from robot (1 byte)</li>
+          <li>Decode the transmission using the table in Figure 1 (below)</li>
+          <li>Run the required commands to update the base station Maze object</li>
+          <ul>
+            <li>turnLeft()</li>
+            <li>turnRight()</li>
+            <li>advanceIntersection(bool frontWall, bool leftWall, bool rightWall)()</li>
+            <li>NOTE - these are the exact same commands that our robot runs to update its version of the Maze object</li>
+          </ul>
+          <li>Transmit the updated information to the GUI</li>
+          <ul>
+            <li>Calls the command: getGUIMessage(byte x, byte y)</li>
+            <li>x = current x location = getX()</li>
+            <li>y = current y location = getY()</li>
+          </ul>
+        </ul>
+      </ul>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-6">
+            <div class="thumbnail">
+              <img src="img/lab3/Base_station_decoder.png" style="width:100%">
+              <div class="caption text-center">
+                <p>Figure 1 - Byte encoding chart</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+          </div>
+        </div>
+      </div>
+
+      <!-- @TO-DO -->
+      <h4 class="page-header text-left">Base Station-to-GUI Transmission</h4>
+      <ul>
+        <li>FROM THE LAB INSTRUCTIONS: One this works, think about the software
+          architecture on your base station. How often do you want to
+          communicate with the GUI? All the time, or could you make this an
+          event-driven operation?</li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
       <hr>
 
       <h3 class="page-header text-center">Robot Integration Group</h3>
-      <p><u>GOAL: Robot-to-GUI integration, full exploration and update on the GUI</u></p>
+      <p><u>GOAL: Robot-to-GUI integration, full exploration, and update the GUI</u></p>
       <div class="container">
         <div class="row">
           <div class="col-md-8">
@@ -208,16 +332,66 @@ Updated: 10/21/2018 -->
         </div>
       </div>
 
+      <!-- @TO-DO -->
+      <h4 class="page-header text-left">Discuss Data Sotrage / Maze Object</h4>
+      <ul>
+        <li></li>
+      </ul>
       <h4 class="page-header text-left">INFO</h4>
       <ul>
         <li></li>
       </ul>
 
+      <h4 class="page-header text-left">Integrate Radio Communication into Software</h4>
+      <ul>
+        <li>Since we had done such a good job integrating our systems for Milestone 2, minimal changes had to be made for Lab 3</li>
+        <li>First, we integrated our new sub-function libraries</li>
+        <ul>
+          <li>Maze.h and Maze.cpp</li>
+          <li>nordic_rf.h and nordic_rf.cpp</li>
+          <li>As previously mentioned, these are the exact same files that the base station uses (modularity!)</li>
+        </ul>
+        <li>Second, we updated our main loop movement logic</li>
+        <ul>
+          <li>The code is identical to the code from Milestone 2, with the addition of just 5 new lines</li>
+        </ul>
+      </ul>
+      <pre class="prettyprint"><code class="language-cpp">
+      // wall detected at intersection
+      if ((sensorStatus[0] == 0) && (sensorStatus[1] == 0) && (sensorStatus[2] == 0) && detect_wall_6in(3) ) {
+            if (detect_wall_6in(1)){
+              turnLeftIntersection(servo_L, servo_R);
+              send_advance_intersection(radio, true, false, true);  //NEW LINE
+              send_turn_left(radio);                                //NEW LINE
+            }
+            else{
+              turnRightIntersection(servo_L, servo_R);
+              send_advance_intersection(radio, true, false, false); //NEW LINE
+              send_turn_right(radio);                               //NEW LINE
+            }
+        }
+        // wall detected but not at an intersection
+        else if (detect_wall_3in(3)) {
+          turnLeft(servo_L, servo_R);
+          send_turn_left(radio);                                    //NEW LINE
+        }
+        // no wall detected --> just track the line
+        else if (sensorStatus[0] == 0) //turn Right
+          adjustRight(servo_L, servo_R, 85);
+        else if (sensorStatus[2] == 0) //turn Left
+          adjustLeft(servo_L, servo_R, 85);
+        else {
+          moveForward(servo_L, servo_R);
+        }
+      </code></pre>
+      <hr>
 
-
-
-
-
+      <!-- @TO-DO -->
+      <h3 class="page-header text-center">Full System Testing</h3>
+      <p>REPLACE THIS LINK WITH THE REAL VIDEO AFTER WE TAKE IT</p>
+      <div class="embed-responsive embed-responsive-21by9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/7NOfNRjhc0I" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
     </div>
 
     <!-- Footer -->
