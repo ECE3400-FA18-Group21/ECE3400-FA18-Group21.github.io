@@ -306,13 +306,9 @@ Updated: 10/21/2018 -->
       <!-- @TO-DO -->
       <h4 class="page-header text-left">Base Station-to-GUI Transmission</h4>
       <ul>
-        <li>FROM THE LAB INSTRUCTIONS: One this works, think about the software
-          architecture on your base station. How often do you want to
-          communicate with the GUI? All the time, or could you make this an
-          event-driven operation?</li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>The getGUIMessage(byte x, byte y) function takes the x and y coordinates of the current robot position and prints out the correct GUI string across the serial connection to the PC. </li>
+        <li>Correct GUI string is a comma separated string containing the row and column positions, and information of walls in the four possible positions surrounding the robot. </li>
+        <li>Since the base station also contains an updated version of the Maze object and updates it everytime it receives a transmission from the robot, this function can just process the walls and robot position variables in the Maze object to retrieve correct information.</li>
       </ul>
       <hr>
 
