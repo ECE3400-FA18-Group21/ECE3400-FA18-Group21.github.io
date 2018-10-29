@@ -2,7 +2,7 @@
 <!-- ECE 3400 | Fall 2018
 website for Team 21
 Created: 08/29/2018
-Updated: 10/21/2018 -->
+Updated: 10/28/2018 -->
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
 
 <html lang="en">
@@ -343,11 +343,11 @@ Updated: 10/21/2018 -->
       <!-- @TO-DO -->
       <h4 class="page-header text-left">Discuss Data Sotrage / Maze Object</h4>
       <ul>
-        <li>We defined a cpp class Maze to store our maze information. It has the following fields:</li> 
+        <li>We defined a cpp class Maze to store our maze information. It has the following fields:</li>
         <ul>
           <li>byte pos: Indicates the robot position. The 4 MSBs make up the X coordinate of the robot, and the 4 LSBs make up the Y coordinate of the robot. Origin (0,0) is the top left corner of the grid.</li>
 
-            
+
           <li>byte heading: Indicates the direction the robot is facing. 0 is North, 1 is East, 2 is South, and 3 is West.</li>
 
           <li>short visited[9]: Keeps track of which squares have been visited already on the grid. The array has 9 shorts (16-bit data) corresponding to rows on the grid. The 9 LSBs are of each short in the array represent the columns in that row. These bits are set to 1 if the corresponding (x,y) coordinate was visited, and 0 if not. For example visited[3] 5th LSB represents whether the coordinate (5,3) was visited.</li>
@@ -355,7 +355,7 @@ Updated: 10/21/2018 -->
           <li>byte walls[18]: This is our most complicated encoding. There are a total of 18 grid lines (9 rows and 9 columns). Along each grid line, there can be a total of 8 walls (excluding the external bounding walls of the 9x9 grid). For example, if we follow the grid line that goes through the first row of the grid, there are 8 spots along that line where a wall could exist. We use this fact to encode our walls seen in a data structure with 0 wasted bits! For each grid line we have a byte, and each bit corresponds to one of the walls that could exist on that gridline. We set the bits to 1 if we see the corresponding walls, and 0 if those walls do not exist. This lets us store all of the walls seen in 18 bytes.</li>
         </ul>
         <li>As discussed earlier, the Maze object has a 3-function interface. This narrow interface makes it extremely easy to reason about updating the maze, and all our complicated bit-shifting and arithmetic is handled internally. Here is the interface:</li>
-        <ul> 
+        <ul>
           <li>void turnLeft(): Updates the heading of the robot in the Maze object</li>
           <li>void turnRight(): Updates the heading of the robot in hte Maze object</li>
           <li>void advanceIntersection(bool frontWall, bool leftWall, bool rightWall): Updates the position of the robot in the maze object, and sets all of the wall bits in walls[18] based on the robot's new position and heading. This function does all of the hard work of shifting the appropriate bits and bit masking, etc.</li>
@@ -416,9 +416,15 @@ Updated: 10/21/2018 -->
         <li>Sends maze information wirelessly to the base station</li>
         <li>Displays updates on the base station GUI</li>
         <li>Stops for enemy robots (IR Hat) and ignores Decoys</li>
+        <ul>
+          <li>We updated our IR detection system to increase range and accuracy</li>
+          <li>To boost range beyond the 1 foot requirement, we added a second amplifier</li>
+          <li>To better differentiate between Robots and Decoys, we use our FFT to check for both
+            the 6.08 kHz IR value as well as its second harmonic frequency</li>
+        </ul>
       </ul>
       <div class="embed-responsive embed-responsive-21by9">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/FCf5-F2dvsk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/Ml7UzIOVPqI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
     </div>
 
