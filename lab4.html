@@ -206,7 +206,6 @@ Updated: 11/02/2018 -->
         <li>FPGA Team = Brian and Eric</li>
       </ul>
       <hr>
-
       <h3 class="page-header text-center" id="Arduino">Arduino &amp; Camera Team</h3>
       <p><u>GOAL: setup the camera and create an FPGA-Arduino communication protocol</u></p>
       <h4 class="page-header text-left">Materials Used</h4>
@@ -218,7 +217,148 @@ Updated: 11/02/2018 -->
         <li>2 × 4.7 μF Polarized Capacitors</li>
         <li>1 × mini-breadboard</li>
       </ul>
-
+      <h4 class="page-header text-left">Wiring Arduino-to-Camera</h4>
+      <ul>
+        <li>First, we <b>DISABLED INTERNAL PULL-UPS ON ARDUINO</b></li>
+        <ul>
+          <li>Tyler discovered how to do this on Mac (see Piazza post)</li>
+          <li>Without this, the I2C signals would be pulled up to 5V, which would break the camera</li>
+        </ul>
+        <li>We wired a 5V input from the Arduino to a 3.3V regulator, with capacitors on the 5V input and 3.3V output to stabilize the power supply</li>
+        <ul>
+          <li>NOTE - the regulator’s output will not be 3.3V unless it is loaded</li>
+          <li>For testing our regulator we added a 330 Ω resistor and measured the output pin</li>
+        </ul>
+        <li>We wired up the schematic provided in the lab, which sets up I2C communication with the camera for programming</li>
+        <ul>
+          <li>NOTE - pin names on the camera differ from the diagram below</li>
+          <ul>
+            <li>SIOC = SCL</li>
+            <li>SIOD = SDA</li>
+            <li>MCLK = XCLK</li>
+          </ul>
+        </ul>
+      </ul>
+      <p>Credit to Kirstin for both of these schematics</p>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/Camera-to-Arduino_3V.jpg" style="width:100%">
+              <div class="caption text-center">
+                <p>Camera-to-Arduino power schematic</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/Camera-to-Arduino_I2C.png" style="width:65%">
+              <div class="caption text-left">
+                <p>Camera-to-Arduino I2C schematic</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+          </div>
+        </div>
+      </div>
+      <h4 class="page-header text-left">Programming the Camera</h4>
+      <ul>
+        <li>The camera has control registers defined by their Serial Camera
+          Control Bus (SCCB) interface</li>
+        <li>We can use this interface via I2C from the Arduino</li>
+        <li>Here are the control bits we need to set, and in which register
+          (the format is REGISTER_NAME[bit_index], bits are 0-indexed):</li>
+          <ul>
+            <li>COM7[7] = 1	&nbsp &nbsp &nbsp	&nbsp &nbsp &nbsp ← SCCB register reset</li>
+            <li>COM14[3] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp ← Enable Manual Resolution Scaling</li>
+            <li>CLKRC[6] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp ← Use external clock</li>
+            <li>COM7[3] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp &nbsp ← QCIF</li>
+            <li>COM7[2],[0] = 10 &nbsp &nbsp	&nbsp← Output format - RGB selection</li>
+            <li>COM15[4:3] = 01 &nbsp &nbsp &nbsp← RGB 565</li>
+            <li>COM7[1] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp &nbsp ← color bar enable</li>
+            <li>COM17[3] = 1 &nbsp &nbsp &nbsp &nbsp	&nbsp ← DSP color bar enable</li>
+            <li>MVFP[5] = 1 &nbsp &nbsp &nbsp &nbsp	&nbsp &nbsp ← mirror image</li>
+            <li>MVFP[4] = 1 &nbsp &nbsp &nbsp &nbsp	&nbsp  &nbsp ← vertically flip image</li>
+          </ul>
+        <li>The camera I2C slave addresses are found on page 10 of the camera datasheet</li>
+        <ul>
+          <li>0x42 = write address</li>
+          <li>0x43 = read address</li>
+          <li>NOTE - Arduino’s Wire library fills in the LSB based on whether we are reading or writing</li>
+          <ul>
+            <li>The actual address we use when calling the Wire library is 0x21 (the 7 MSB of the above slave addresses</li>
+          </ul>
+        </ul>
+        <li>NOTE - all values will be read in hexadecimal format</li>
+        <ul>
+          <li>All addresses and write values should also be written in hex</li>
+          <li>Be sure you specify that format in your code (eg. 0xAB)</li>
+        </ul>
+        <li>We used the provided read_register_value() function to create a function read_key_registers()</li>
+        <ul>
+          <li>We use this as a diagnostic tool to print out the values in all of the target registers</li>
+          <li>It is the first function called, and then is called again after writing to the registers</li>
+          <li>This allows us to compare the results to make sure we set the correct registers to the desired value</li>
+        </ul>
+      </ul>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/Camera_Setup.png" style="width:100%">
+              <div class="caption text-center">
+                <p>Setting up the camera registers</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+      </div>
+      <h4 class="page-header text-left">Creating FPGA-to-Camera Communication Scheme</h4>
+      <ul>
+        <li>For the competition, we need to be able to detect the following:</li>
+        <ul>
+          <li>Presence of a treasure</li>
+          <li>Color detection - blue or red</li>
+          <li>Shape detection - triangle, square, or circle</li>
+        </ul>
+        <li>We created the below table to encode this information into 1 byte</li>
+        <ul>
+          <li>Although we are using a full byte, the 7 possibilities fit into just 3 bits</li>
+        </ul>
+        <li>During the lab, we plan to send this over 3 parallel wires</li>
+        <ul>
+          <li>This is easier to setup</li>
+          <li>Requires more pins, but we have plenty available on the extra Arduino Uno we are using</li>
+        </ul>
+        <li>During the competition, we plan to use software serial</li>
+        <ul>
+          <li>This is more challenging to setup</li>
+          <li>Only requires two pins -> we only have two pins available</li>
+        </ul>
+      </ul>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/FPGA-to-Camera Encoding.png" style="width:100%">
+              <div class="caption text-center">
+                <p>FPGA-to-Arduino communication scheme</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+      </div>
       <hr>
 
       <h3 class="page-header text-center">FPGA Team</h3>
@@ -229,7 +369,6 @@ Updated: 11/02/2018 -->
         <li>1 × GPIO-to-VGA adapter</li>
         <li>Altera Quartus Software</li>
       </ul>
-
     </div>
 
 
