@@ -239,11 +239,9 @@ Updated: 11/02/2018 -->
           </ul>
         </ul>
       </ul>
-      <p>Credit to Kirstin for both of these schematics</p>
+      <p>Credit to Kirstin for both schematic diagrams</p>
       <div class="container">
         <div class="row">
-          <div class="col-md-2">
-          </div>
           <div class="col-md-4">
             <div class="thumbnail">
               <img src="img/lab4/Camera-to-Arduino_3V.jpg" style="width:100%">
@@ -260,7 +258,13 @@ Updated: 11/02/2018 -->
               </div>
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/Wiring.jpeg" style="width:80%">
+              <div class="caption text-center">
+                <p>Full system wiring &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -272,16 +276,40 @@ Updated: 11/02/2018 -->
         <li>Here are the control bits we need to set, and in which register
           (the format is REGISTER_NAME[bit_index], bits are 0-indexed):</li>
           <ul>
-            <li>COM7[7] = 1	&nbsp &nbsp &nbsp	&nbsp &nbsp &nbsp ← SCCB register reset</li>
-            <li>COM14[3] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp ← Enable Manual Resolution Scaling</li>
-            <li>CLKRC[6] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp ← Use external clock</li>
-            <li>COM7[3] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp &nbsp ← QCIF</li>
-            <li>COM7[2],[0] = 10 &nbsp &nbsp	&nbsp← Output format - RGB selection</li>
-            <li>COM15[4:3] = 01 &nbsp &nbsp &nbsp← RGB 565</li>
-            <li>COM7[1] = 1 &nbsp &nbsp &nbsp	&nbsp &nbsp &nbsp ← color bar enable</li>
-            <li>COM17[3] = 1 &nbsp &nbsp &nbsp &nbsp	&nbsp ← DSP color bar enable</li>
-            <li>MVFP[5] = 1 &nbsp &nbsp &nbsp &nbsp	&nbsp &nbsp ← mirror image</li>
-            <li>MVFP[4] = 1 &nbsp &nbsp &nbsp &nbsp	&nbsp  &nbsp ← vertically flip image</li>
+            <div class="row">
+              <div class="col-md-2">
+                <li>COM7[7] = 1</li>
+                <li>COM7[3] = 1</li>
+                <li>COM7[2],[0] = 1, 1</li>
+                <li>COM7[1] = 1</li>
+                <li>COM3[3] = 1</li>
+                <li>COM9[6:4] = 000</li>
+                <li>COM9[0] = 1</li>
+                <li>COM15[7:6] = 11</li>
+                <li>COM15[5:4] = 01</li>
+                <li>COM17[3] = 1</li>
+                <li>CLKRC[7] = 1</li>
+                <li>CLKRC[6] = 1</li>
+                <li>MVFP[5] = 1</li>
+                <li>MVFP[4] = 1</li>
+              </div>
+              <div class="col-md-10">
+                ← SCCB register reset<br>
+                ← Output format - QCIF selection<br>
+                ← Output format - RGB selection<br>
+                ← Color bar enable<br>
+                ← Scale enable<br>
+                ← Automatic Gain Ceiling (2x)<br>
+                ← Freeze AGC/AEC<br>
+                ← Data format - output full range enable<br>
+                ← RGB 565 enable<br>
+                ← DSP color bar enable<br>
+                ← Enable digital PLL option<br>
+                ← Use external clock directly<br>
+                ← Mirror image enable<br>
+                ← VFlip enable<br>
+              </div>
+            </div>
           </ul>
         <li>The camera I2C slave addresses are found on page 10 of the camera datasheet</li>
         <ul>
@@ -369,9 +397,132 @@ Updated: 11/02/2018 -->
         <li>1 × GPIO-to-VGA adapter</li>
         <li>Altera Quartus Software</li>
       </ul>
+
+      <h4 class="page-header text-left">PLL and Clocks</h4>
+      <ul>
+        <li>Created a Phase-Locked Loop (PLL)
+        <ul>
+            <li>Takes a 50 MHz clock input</li>
+            <li>Outputs 24 MHz, 25 MHz, and 50 MHz clocks</li>
+        </ul>
+        <li>The 24 MHz clock is used to drive the camera</li>
+        <li>The 25 MHz clock is used for the downsampler, image processor, and VGA driver</li>
+      </ul>
+      <h4 class="page-header text-left">Buffer Reader</h4>
+      <ul>
+        <li>Display test pattern across the VGA Driver by writing a test array to
+          memory and reading from it</li>
+        <li>Update the X_ADDR and Y_ADDR, since these form the write address in
+          memory corresponding to the pixel that is to be displayed</li>
+          <ul>
+              <li>If X_ADDR < 50, write a green pixel</li>
+              <li>Else if X_ADDR < 80, write a blue pixel</li>
+              <li>Else write a red pixel</li>
+          </ul>
+        <li>Once this is written to memory, VGA driver continuously reads all the
+          pixel values in memory and displays them</li>
+      </ul>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/testImage.jpg" style="width:100%">
+              <div class="caption text-center">
+                <p>Buffer reader test image</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+          </div>
+        </div>
+      </div>
+      <h4 class="page-header text-left">Downsampler</h4>
+      <ul>
+        <li>The camera is set up to output RGB565 pixel format, thus there are:</li>
+        <ul>
+        	<li>5 bits for the red channel</li>
+        	<li>6 bits for the green channel</li>
+         	<li>5 buts for the blue channel</li>
+        	<li>A total of 16 bits per image</li>
+        </ul>
+        <li>Since the camera outputs 8 bits in parallel at a time per pixel,
+          2 clock cycles are needed to output all 16 bits that represent a
+          single pixel</li>
+        <li>The output is broken up as follows:</li>
+        <ul>
+        	<li>Byte on first cycle = 5 bits of red + 3 bits of green</li>
+        	<li>Byte on second cycle = 3 bits of green + 5 bits of blue</li>
+         	<li>See the <i>RGB565 timing diagram</i> below for more information</li>
+        </ul>
+        <li>To downsample to RGB332, simply take the 3 MSB’s of red, 3 MSB’s of
+          green, and 2 MSB’s of blue</li>
+        <li>HREF signal is asserted during a readout of an entire row of pixels,
+          and is low in between row readouts</li>
+        <li>After all rows have been readout in a single frame, VSYNC is asserted</li>
+        <ul>
+        	<li>See the <i>VGA frame timing diagram</i> below for more information
+        </ul>
+        <li>Every two cycles of PCLK (clock at which pixels are readout from camera):
+        <ul>
+        	<li>a valid RGB332 pixel value is produced</li>
+        	<li>W_EN needs to be asserted</li>
+        </ul>
+        <li>In top level, use readout sequence with HREF and VSYNC to determine
+          the address in memory that needs to be written to during readout and
+          when it is to be incremented</li>
+      </ul>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/rgb565Timing.png" style="width:75%">
+              <div class="caption text-center">
+                <p>RGB565 timing diagram</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="thumbnail">
+              <img src="img/lab4/frameTiming.png" style="width:100%">
+              <div class="caption text-center">
+                <p>VGA frame timing diagram</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+          </div>
+        </div>
+      </div>
+      <h4 class="page-header text-left">Color Detection</h4>
+      <ul>
+        <li>For this lab, the color detection task consisted of determining
+          whether a given image was primarily blue or primarily red</li>
+        <ul>
+        	<li>Determine this by counting frequency of pixels with an R value >
+            B value</li>
+        </ul>
+        <li>Every VGA clock cycle, the image processing block reads a new pixel
+          from memory
+        <li>The downsampler stores three bits of red information and two bits
+          of blue information</li>
+        <li>Given this, we count the number of times the two most significant
+          bits of red are greater than the two most significant bits of blue</li>
+        <ul>
+        	<li>If this counter exceeds half the number of pixels in the image
+            (12672) by the end of the frame, the image was majority red</li>
+        </ul>
+        <li>Every time VSYNC rises to signal a new frame, we update an output
+          pin according to:</li>
+        <ul>
+        	<li>Majority red = HIGH</li>
+        	<li>Majority blue = LOW</li>
+        </ul>
+      </ul>
     </div>
-
-
 
     <!-- Footer -->
     <footer>
