@@ -300,10 +300,6 @@ Updated: 10/28/2018 -->
           </ul>
         </ul>
       </ul>
-
-
-
-      <!-- @TO-DO -->
       <h4 class="page-header text-left">Base Station-to-GUI Transmission</h4>
       <ul>
         <li>The getGUIMessage(byte x, byte y) function takes the x and y coordinates of the current robot position and prints out the correct GUI string across the serial connection to the PC. </li>
@@ -311,7 +307,6 @@ Updated: 10/28/2018 -->
         <li>Since the base station also contains an updated version of the Maze object and updates it everytime it receives a transmission from the robot, this function can just process the walls and robot position variables in the Maze object to retrieve correct information.</li>
       </ul>
       <hr>
-
       <h3 class="page-header text-center">Robot Integration Group</h3>
       <p><u>GOAL: Robot-to-GUI integration, full exploration, and update the GUI</u></p>
       <div class="container">
@@ -337,10 +332,6 @@ Updated: 10/28/2018 -->
           </div>
         </div>
       </div>
-
-
-
-      <!-- @TO-DO -->
       <h4 class="page-header text-left">Discuss Data Sotrage / Maze Object</h4>
       <ul>
         <li>We defined a cpp class Maze to store our maze information. It has the following fields:</li>
@@ -361,10 +352,6 @@ Updated: 10/28/2018 -->
           <li>void advanceIntersection(bool frontWall, bool leftWall, bool rightWall): Updates the position of the robot in the maze object, and sets all of the wall bits in walls[18] based on the robot's new position and heading. This function does all of the hard work of shifting the appropriate bits and bit masking, etc.</li>
         </ul>
       </ul>
-
-
-
-
       <h4 class="page-header text-left">Integrate Radio Communication into Software</h4>
       <ul>
         <li>Since we had done such a good job integrating our systems for Milestone 2, minimal changes had to be made for Lab 3</li>

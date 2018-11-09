@@ -2,7 +2,7 @@
 <!-- ECE 3400 | Fall 2018
 website for Team 21
 Created: 08/29/2018
-Updated: 11/02/2018 -->
+Updated: 11/09/2018 -->
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
 
 <html lang="en">
@@ -189,7 +189,7 @@ Updated: 11/02/2018 -->
               <li>For this lab, we are going to use parallel communication</li>
               <ul>
                 <li>We have open pins on the Arduino we are using</li>
-                <li>Easy to implement with just 3 wires</li>
+                <li>Easy to implement</li>
               </ul>
               <li>For the actual implementation on the robot, we are going to use software-serial</li>
               <ul>
@@ -360,12 +360,13 @@ Updated: 11/02/2018 -->
         <ul>
           <li>Although we are using a full byte, the 7 possibilities fit into just 3 bits</li>
         </ul>
-        <li>During the lab, we plan to send this over 3 parallel wires</li>
+        <li>In Lab 4, we only need to be able to detect color: Red or Blue</li>
         <ul>
-          <li>This is easier to setup</li>
-          <li>Requires more pins, but we have plenty available on the extra Arduino Uno we are using</li>
+          <li>This is easily done with one wire from a GPIO pin on the FPGA to a
+            digital I/O pin on the Arduino</li>
         </ul>
-        <li>During the competition, we plan to use software serial</li>
+        <li>During the competition, when we need to transmit three bits at a time,
+          we plan to use software serial</li>
         <ul>
           <li>This is more challenging to setup</li>
           <li>Only requires two pins -> we only have two pins available</li>
@@ -388,7 +389,6 @@ Updated: 11/02/2018 -->
         </div>
       </div>
       <hr>
-
       <h3 class="page-header text-center">FPGA Team</h3>
       <p><u>GOAL: setup the FPGA to perform shape and color detection</u></p>
       <h4 class="page-header text-left">Materials Used</h4>
@@ -522,7 +522,24 @@ Updated: 11/02/2018 -->
         	<li>Majority blue = LOW</li>
         </ul>
       </ul>
+    <hr>
+    <h3 class="page-header text-center">Full System Testing</h3>
+    <p>This video demonstration shows our robot completing all required behaviors:</p>
+    <ul>
+      <li>Uses the camera to capture a live image</li>
+      <li>Downsamples that image from RGB565 to RGB332 on the FPGA</li>
+      <li>Displays that image on the monitor through the VGA adapter</li>
+      <li>The FPGA processes the data to determine if the image is red or blue</li>
+      <li>The FPGA transmits that information to the Arduino</li>
+      <li>The Arduino prints the results onto the Serial monitor</li>
+    </ul>
+    <div class="embed-responsive embed-responsive-21by9">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/JfasRdmIlkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
+    </div>
+
+
+
 
     <!-- Footer -->
     <footer>
