@@ -171,15 +171,23 @@ Updated: 11/29/2018 -->
 
       <h4 class="page-header text-left">Image Processing and Storage</h4>
       <ul class="list-bullet">
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>Inspired by Team 3 (Pulse)</li>
+        <li>Break up  image into 3 sections diagonally</li>
+        <img src="img/milestone4/image_proc.png" style="width:40%">
+        <li>Create six counters: one for each color (blue and red) for each of the three sections on the diagonal</li>
+        <li>In each section, increment the blue or red counter if a majority blue or majority red pixel was seen respectively</li>
       </ul>
       <h4 class="page-header text-left">Image Analysis for Color and Shape Detection</h4>
       <ul class="list-bullet">
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>Based on the pixel/color counts, we can determine which shape and which color was detected
+</li>
+        <ul>
+        	<li>If only the center has lots of blue (or red) majority pixels, then was most likely a blue (or red) diamond
+			</li>
+			<li>If the center and bottom right sections contain blue (or red) majority pixels, most likely triangle
+			</li>
+			<li>If all three sections contain blue (or red) majority pixels, most likely square</li>
+        </ul>
       </ul>
       <h4 class="page-header text-left">Encoding</h4>
       <ul class="list-bullet">
