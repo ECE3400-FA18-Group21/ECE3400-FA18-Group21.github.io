@@ -2,8 +2,7 @@
 <!-- ECE 3400 | Fall 2018
 website for Team 21
 Created: 08/29/2018
-Updated: 09/06/2018 -->
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+Updated: 11/29/2018 -->
 
 <html lang="en">
 
@@ -30,6 +29,7 @@ Updated: 09/06/2018 -->
 
     <!-- Custom styles for this template -->
     <link href="css/agency.css" rel="stylesheet">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
 
     <!--favicon support for all modern browsers / mobile devices-->
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
@@ -89,8 +89,7 @@ Updated: 09/06/2018 -->
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="team-contract.html#contract">Team Contract</a>
                 <a class="dropdown-item" href="meeting-minutes.html#minutes">Meeting Minutes</a>
-                <a class="dropdown-item" href="#">TBD 3</a>
-                <a class="dropdown-item" href="#">TBD 4</a>
+                <a class="dropdown-item" href="ethics.html#assignment">Ethics Homework</a>
               </div>
             </li>
             <li class="nav-item">
@@ -119,9 +118,9 @@ Updated: 09/06/2018 -->
       <h1 class="page-header text-center">Milestone 3</h1>
       <hr>
       <h4 class="page-header text-left">Milestone Goals</h4>
-      <p> Implement a maze navigation algorithm that effectively explores arbitrary mazes.
-      </p>
-      <h4 class="page-header text-left">Navigation Algorithm- DFS</h4>
+      <p> Implement a maze navigation algorithm that effectively explores mazes
+        of arbitrary size and configuration, while also updating the GUI.</p>
+      <h4 class="page-header text-left">Navigation Algorithm - <i>Depth First Search (DFS)</i></h4>
       <ul class="list-bullet">
         <li>We chose to implement a modified DFS algorithm because it is relatively simple to get working and does not use very much memory.</li>
         <li>Our DFS prioritizes moving straight over turning left or right, as turning takes time.</li>
@@ -129,49 +128,51 @@ Updated: 09/06/2018 -->
         <li>When the robot encounters a dead end (3 walls) it begins reversing its movement.</li>
         <li>Unless hte robot has explored everything, there will be some unexplored node along the robot's path. It will continue retracing its steps
         until it finds an unexplored grid space, at which point it will turn and explore the new area.</li>
-        <li>To support this, we store the coordinates of each grid node, so that the robot can retrace its steps in the opposite direction. This 
+        <li>To support this, we store the coordinates of each grid node, so that the robot can retrace its steps in the opposite direction. This
         is stored in an array that functions as a stack (with a pointer that we change to "pop" coordinates off of the stack).</li>
-        <li>When the robot finds that it can only see coordinates that it has encountered before, we move into one of these spaces. We then search in 
+        <li>When the robot finds that it can only see coordinates that it has encountered before, we move into one of these spaces. We then search in
         our traversal stack for the coordinate we just moved into, and pop off everything that came after it. We then continue reversing our steps as described above.</li>
         <li>Below is pseudo-code demonstrating the algorithm.</li>
       </ul>
+      <br>
       <pre class="prettyprint"><code class="language-cpp">
-      void dfs(){
-        if (forward_unexplored){
-          move_forward();
-          push_coordinate_stack();
+        void dfs(){
+          if (forward_unexplored){
+            move_forward();
+            push_coordinate_stack();
+          }
+          else if (right_unexplored){
+            turn_right();
+            move_forward();
+            push_coordinate_stack();
+          }
+          else if (left_unexplored){
+            turn_left();
+            move_forward();
+            push_coordinate_stack();
+          }
+          else if (only_see_walls){
+            turn_around();
+            move_forward();
+            retrace_steps();
+          }
+          else{
+            move_visited_grid();
+            pop_coordinates_stack();
+            retrace_steps();
+          }
         }
-        else if (right_unexplored){
-          turn_right();
-          move_forward();
-          push_coordinate_stack();
-        }
-        else if (left_unexplored){
-          turn_left();
-          move_forward();
-          push_coordinate_stack();
-        }
-        else if (only_see_walls){
-          turn_around();
-          move_forward();
-          retrace_steps();
-        }
-        else{
-          move_visited_grid();
-          pop_coordinates_stack();
-          retrace_steps();
-        }
-      }
 
-      void retrace_steps(){
-        pos = pop_coordinate_stack();
-        move_to_coordinate(pos);
-        if (see_unexplored)
-          dfs();
-        else
-          retrace_steps();
-      }
+        void retrace_steps(){
+          pos = pop_coordinate_stack();
+          move_to_coordinate(pos);
+          if (see_unexplored)
+            dfs();
+          else
+            retrace_steps();
+        }
       </code></pre>
+    </div>
 
     <!-- Footer -->
     <footer>
