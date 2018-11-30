@@ -169,30 +169,52 @@ Updated: 11/29/2018 -->
         function (used by the Base Station) to output treasure information.
       </p>
 
-      <h4 class="page-header text-left">Treasure Detection Algorithm</h4>
+      <h4 class="page-header text-left">Image Processing and Storage</h4>
       <ul class="list-bullet">
         <li></li>
         <li></li>
         <li></li>
       </ul>
-      <h4 class="page-header text-left">Color Detection Algorithm</h4>
+      <h4 class="page-header text-left">Image Analysis for Color and Shape Detection</h4>
       <ul class="list-bullet">
         <li></li>
         <li></li>
         <li></li>
       </ul>
-      <h4 class="page-header text-left">Shape Detection Algorithm</h4>
+      <h4 class="page-header text-left">Encoding</h4>
       <ul class="list-bullet">
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>We connected 3 GPIO pins on the FPGA to 3 digital I/O pins on the Arduino</li>
+        <li>The Arduino periodically polls these inputs</li>
+        <ul>
+          <li>We have a variable for each of the 6 possible treasure types</li>
+          <li>To prevent false-positives, upon detecting a treasure we increment
+            the counter for that treasure type and reset the other counters to 0</li>
+          <li>We only declare that a treasure has truly been found if the counter
+            rises above a threshold</li>
+          <li>If none of the counters are greater than the threshold, there is no treasure present</li>
+          <li>This information is then re-encoded into 3 bits and sent to the Base Station using our Radio</li>
+        </ul>
+        <li>The following encoding scheme is used throughout the robot:</li>
       </ul>
-      <h4 class="page-header text-left">Integration onto Robot</h4>
-      <ul class="list-bullet">
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+          </div>
+          <div class="col-md-8">
+            <div class="thumbnail">
+              <img src="img/milestone4/full_system_encoding.png" style="width:100%">
+              <div class="caption text-center">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+          </div>
+        </div>
+      </div>
+
+
+
+
       <br><hr>
       <h3 class="page-header text-center">Treasure Detection Demonstration</h3>
       <p>This video demonstrates our robot completing all required behaviors:</p>
@@ -203,7 +225,7 @@ Updated: 11/29/2018 -->
         <li>Transmitting treasure detection information from the FPGA to the Arduino</li>
       </ul>
       <p><b>Unfortunately, as mentioned above, we do not have a video demonstration
-        at this time</b></p>
+        at this time :'(</b></p>
       <!--<div class="embed-responsive embed-responsive-21by9">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/JfasRdmIlkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>-->
