@@ -122,17 +122,35 @@ Updated: 11/29/2018 -->
         of arbitrary size and configuration, while also updating the GUI.</p>
       <h4 class="page-header text-left">Navigation Algorithm - <i>Depth First Search (DFS)</i></h4>
       <ul class="list-bullet">
-        <li>We chose to implement a modified DFS algorithm because it is relatively simple to get working and does not use very much memory.</li>
-        <li>Our DFS prioritizes moving straight over turning left or right, as turning takes time.</li>
-        <li>The robot will continue moving to unexplored grid spaces until it either hits a dead end or encounters only grid spaces it has visited before.</li>
-        <li>When the robot encounters a dead end (3 walls) it begins reversing its movement.</li>
-        <li>Unless hte robot has explored everything, there will be some unexplored node along the robot's path. It will continue retracing its steps
-        until it finds an unexplored grid space, at which point it will turn and explore the new area.</li>
-        <li>To support this, we store the coordinates of each grid node, so that the robot can retrace its steps in the opposite direction. This
-        is stored in an array that functions as a stack (with a pointer that we change to "pop" coordinates off of the stack).</li>
-        <li>When the robot finds that it can only see coordinates that it has encountered before, we move into one of these spaces. We then search in
-        our traversal stack for the coordinate we just moved into, and pop off everything that came after it. We then continue reversing our steps as described above.</li>
-        <li>Below is pseudo-code demonstrating the algorithm.</li>
+        <li>We chose to implement a modified DFS algorithm</li>
+        <ul>
+          <li>DFS is relatively simple to get working</li>
+          <li>DFS does not use very much memory</li>
+        </ul>
+        <li>Our DFS prioritizes moving straight over turning left or right, as turning takes time</li>
+        <li>The robot will continue moving to unexplored grid spaces until it either:</li>
+        <ul>
+           <li>Hits a dead end</li>
+           OR
+           <li>Encounters only grid spaces it has visited before</li>
+        </ul>
+        <li>When the robot encounters a dead end (3 walls), it begins backtracking</li>
+        <li>Unless the robot has explored everything, there is guaranteed to be some unexplored node along the robot's path</li>
+        <ul>
+          <li>It will continue retracing its steps until it finds an unexplored grid space</li>
+          <li>At that point, it will turn and explore the new area</li>
+        </ul>
+        <li>To support this, we store the coordinates of each grid node</li>
+        <ul>
+          <li>This allows the robot to retrace its steps in the opposite direction</li>
+          <li>This information is stored in an array that functions as a stack (with a pointer that we change to "pop" coordinates off of the stack)</li>
+        </ul>
+        <li>When the robot finds that it can only see coordinates that it has encountered before, we move into one of those spaces</li>
+        <ul>
+          <li>We then search in our traversal stack for the coordinate we just moved into, and pop off everything that came after it</li>
+          <li>We then continue reversing our steps as described above</li>
+        </ul>
+        <li>Below is pseudo-code demonstrating our algorithm</li>
       </ul>
       <br>
       <pre class="prettyprint"><code class="language-cpp">
@@ -172,6 +190,20 @@ Updated: 11/29/2018 -->
             retrace_steps();
         }
       </code></pre>
+      <br><hr>
+      <h3 class="page-header text-center">Maze Navigation Algorithm Demonstration</h3>
+      <p>This video demonstrates our robot completing all required behaviors:</p>
+      <ul>
+        <li>Robot capable of maze exploration using DFS</li>
+        <ul>
+          <li>Different maze configurations are used</li>
+          <li>At least one of the configurations is a minimum size of 4x5</li>
+        </ul>
+        <li>Robot capable of updating the GUI during exploration</li>
+      </ul>
+      <div class="embed-responsive embed-responsive-21by9">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/JfasRdmIlkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
     </div>
 
     <!-- Footer -->
