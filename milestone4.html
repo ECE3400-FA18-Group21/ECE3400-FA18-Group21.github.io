@@ -118,22 +118,57 @@ Updated: 11/29/2018 -->
       <hr>
       <h4 class="page-header text-left">Milestone Goals</h4>
       <p>
-        Integrate the following functionality:
+        Improve the image processor to add the following functionality:
         <ul>
           <li>Treasure recognition</li>
           <li>Treasure color detection</li>
           <li>Treasure shape detection</li>
-          <li>FPGA-to-Arduino communication</li>
+          <li>FPGA-to-Arduino notification of detected treasure</li>
         </ul>
       </p>
       <hr>
 
-      <h4 class="page-header text-left">Hardware Setup</h4>
-      <ul class="list-bullet">
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <h4 class="page-header text-left">Troubleshooting</h4>
+      <p><u>Issues</u><br>
+        During Lab 4, and throughout the past few weeks working on Milestone 4,
+        our group became aware of issues affecting our camera-FPGA setup.
+        The performance of the camera would drastically degrade over time. The
+        longer we ran the camera, the more dim it would become. Noise, visible
+        as rainbow bars on the camera output, would appear and eventually
+        consume the image.
+      </p>
+      <p><u>Checking the Arduino</u><br>
+        To confirm that the Arduino code used to setup
+        the cameras was not to blame, we checked the register values with the
+        TAs, as well as against other groups. Our registers, however, appear
+        to be set correctly.
+      </p>
+      <p><u>Checking the Verilog</u><br>
+        Next, we investigated our Verilog code. After spending over two weeks
+        with little to no progress, we decided to test our system with another
+        group's working code. We used Verilog code from both Team 3 and Team 5,
+        with the only edits being the I/O pin numbers to match our physical setup.
+        Unfortunately, neither group's code worked properly, which confirmed our
+        suspicions of hardware issues.
+      </p>
+      <p><u>Checking the Hardware</u><br>
+        Our group did <i>not</i> receive a ribbon cable during Lab 4. Since
+        there were no more female-to-female cables available, we were forced to
+        cut and crimp our own wires. Although we have tested for connectivity,
+        the wiring is a major concern for us. In addition, we fear that our
+        camera might be broken, but since there are no cameras left, we are
+        unable to test this hypothesis
+      <p><u>Conclusion</u><br>
+        As a result, we have been unable to fully implement or test our Tresure
+        Detection. Nonetheless, we have came up with the algorithms and ideas that
+        we <i>would</i> implement if we had functioning hardware. In addition,
+        we have taken the steps to integrate Treasure Detection into our full
+        Arduino system. We connected 3 GPIO pins from the FPGA to the Arduino to
+        transmit the information, updated our Arduino's Radio Communication protocoal
+        to handle the additional information, and modified our <i>update_GUI()</i>
+        function (used by the Base Station) to output treasure information.
+      </p>
+
       <h4 class="page-header text-left">Treasure Detection Algorithm</h4>
       <ul class="list-bullet">
         <li></li>
@@ -167,9 +202,11 @@ Updated: 11/29/2018 -->
         <li>Robot capable of distinguishing a square, triangle, and diamond shape</li>
         <li>Transmitting treasure detection information from the FPGA to the Arduino</li>
       </ul>
-      <div class="embed-responsive embed-responsive-21by9">
+      <p><b>Unfortunately, as mentioned above, we do not have a video demonstration
+        at this time</b></p>
+      <!--<div class="embed-responsive embed-responsive-21by9">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/JfasRdmIlkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
+      </div>-->
     </div>
 
     <!-- Footer -->
