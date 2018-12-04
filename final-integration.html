@@ -117,25 +117,89 @@ Updated: 12/03/2018 -->
       <br><br>
       <h1 class="page-header text-center">Final System Integration and Robot Design</h1>
       <hr>
-
-      <!--TO DO-->
       <h4 class="page-header text-left">Robot - Hardware Design</h4>
       <ul>
-        <li>FAIL SAFE SWITCH</li>
-        <li>No FPGA or Camera</li>
+        <li>Bill of Materials for Main Components</li>
         <ul>
-          <li>Would've mounted ____</li>
-          <li>Would've plugged in & used a switch</li>
-          <li>Explain decision to leave off</li>
+          <li>1 × Arduino Uno</li>
+          <li>2 × Continuous Rotation Servos</li>
+          <li>1 × Battery Pack</li>
+          <li>1 × Pushbutton</li>
+          <ul>
+            <li>Positioned as low as possible to give a low center of mass in z-direction for stability</li>
+          </ul>
+          <li>3 × Digital Line Sensors</li>
+          <li>3 × Long Range IR Sensors</li>
+          <li>1 × IR Hat</li>
+          <li>1 × IR Sensor</li>
+          <li>1 × Microphone</li>
+          <li>1 × Radio transceiver</li>
+          <li>1 × Camera (*)</li>
+          <li>1 × FPGA (*)</li>
+          <li>1 × Permanent Switch (*)</li>
         </ul>
-        <li>COMPONENTS WIRED NICELY</li>
+        <li>Fail Safe Switch</li>
+        <ul>
+          <li>A simple push-button switch is wired into a digital I/O pin</li>
+          <li>When pressed, this overrides 660 Hz detection and advances the
+            robot into the main loop</li>
+          <li>Althogh we have never had any issues with our microphone detection
+            circuit, this is a valuable fail-safe system</li>
+        </ul>
+        <li>(*) Camera and FPGA</li>
+        <ul>
+          <li>We made the tough decision to <i>not</i> mount these components for the competition</li>
+          <li>Although they are fully integrated into our software, our Treasure Detection algorithm does not work due to a broken camera</li>
+          <li>Since there is a penalty for false detection, we decided to prioritize other tasks and not mount these components</li>
+          <!--@TO DO-->
+          <li>If our Treasure Detection had worked, we would've mounted the components as follows:</li>
+          <ul>
+            <li>Camera:</li>
+            <ul>
+              <li>The SCL pin, A5, is also used by our microphone detection circuit</li>
+              <li>To allow for this, we came up with an innovative solution with a permanent switch:</li>
+              <ul>
+                <li>The camera is only programmed once, immediately upon power-on</li>
+                <li>Once this is done, the SCL pin can be switched to an input-pin and used for 660 Hz detection</li>
+                <li>Using the manual switch, we would (1) turn the robot on, (2) wait 20 seconds for the camera to be programmed, (3) flip the switch to connect the microphone circuitry</li>
+                <li>This method worked flawlessly during our testing</li>
+              </ul>
+            </ul>
+            <li>FPGA:</li>
+          </ul>
+        </ul>
+        <li>Wiring</li>
         <ul>
           <li>Proper wire types</li>
-          <li>Proper wire colors</li>
-          <li>Shortest length possible</li>
-          <li>FINAL PINOUT??</li>
-          <li>INCLUDE PICTURES</li>
+          <ul>
+            <li>Solid Core = for breadboard connections</li>
+            <li>Stranded Core = for flexible component connections</li>
+          </ul>
+          <!--@TO DO-->
+          <li>Wiring Scheme</li>
+          <ul>
+            <li>Red = </li>
+            <li>Black = </li>
+            <li>Blue = </li>
+            <li>Yellow = </li>
+          </ul>
+          <li>We made every effort to keep wires as short as possible</li>
         </ul>
+        <!--@TO DO-->
+        <li>Pinout</li>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+              <div class="thumbnail">
+                <img src="img/" style="width:100%">
+              </div>
+            </div>
+            <div class="col-md-3">
+            </div>
+          </div>
+        </div>
       </ul>
       <h4 class="page-header text-left">Robot - Software Processes</h4>
       <div class="container">
@@ -249,7 +313,7 @@ Updated: 12/03/2018 -->
               </div>
             </div>
           </ul>
-          <!--TO DO-->
+          <!--@TO DO-->
           <li>Structural Components</li>
           <ul>
             <li>Brian and Kenneth had begun designing new structural and mounting hardware to be 3D printed</li>
